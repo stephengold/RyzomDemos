@@ -237,7 +237,8 @@ public class CharacterGui extends SimpleAppState {
                 character.toggleGroup();
                 break;
             default:
-                BodyPart part = BodyPart.values()[selectedLine - 3];
+                int ordinal = selectedLine - firstPartStatusLine;
+                BodyPart part = BodyPart.values()[ordinal];
                 character.previousAssetFor(part);
         }
 
