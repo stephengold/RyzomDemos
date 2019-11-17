@@ -1,0 +1,57 @@
+plugins {
+    id 'application'
+    id 'java'
+}
+
+description = 'build characters using Ryzom assets'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+ext.jmonkeyengineVersion = '3.2.4-stable'
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) { // compile-time options:
+        options.compilerArgs << '-Xdiags:verbose'
+        options.compilerArgs << '-Xlint:unchecked'
+        options.deprecation = true
+        options.encoding = 'UTF-8'
+    }
+    tasks.withType(JavaExec) { // runtime options:
+        classpath sourceSets.main.runtimeClasspath
+        enableAssertions true
+        //jvmArgs '-verbose:gc'
+        jvmArgs '-XX:+UseConcMarkSweepGC'
+        //jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
+    }
+}
+
+mainClassName = 'ryzomdemos.BuildCharacter'
+if (!hasProperty('mainClass')) {
+    ext.mainClass = mainClassName
+}
+jar.manifest.attributes('Main-Class': mainClassName)
+
+repositories {
+    //mavenLocal()
+    maven { url 'https://dl.bintray.com/stephengold/jme3utilities' }
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
+    
+    // 3 libraries included solely to avoid AssetConfig warnings:
+    runtimeOnly 'org.jmonkeyengine:jme3-blender:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
+
+    implementation "jme3utilities:jme3-utilities-heart:4.1.0for32"
+    implementation "jme3utilities:jme3-utilities-ui:0.7.8for32"
+}
+
+// cleanup tasks
+clean.dependsOn('cleanWrittenAssets')
+task cleanWrittenAssets(type: Delete) {
+    delete 'Written Assets'
+}
