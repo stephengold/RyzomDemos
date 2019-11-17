@@ -27,7 +27,7 @@
 package ryzomdemos;
 
 /**
- * Enumerate the 8 body parts in a Ryzom-based character model.
+ * Enumerate the 7 body parts in a Ryzom-based character model.
  *
  * @author Stephen Gold sgold@sonic.net
  */
