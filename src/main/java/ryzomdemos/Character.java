@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.logging.Logger;
+import jme3utilities.math.noise.Generator;
 
 /**
  * Encapsulate the properties of a character model.
@@ -76,6 +77,10 @@ class Character {
      */
     final private EnumMap<BodyPart, String> assets
             = new EnumMap<>(BodyPart.class);
+    /**
+     * pseudo-random generator
+     */
+    final private static Generator generator = new Generator();
     /**
      * 1-letter code for the character's gender ("f" or "m")
      */
@@ -344,6 +349,17 @@ class Character {
         }
 
         setGeometry(part, previous);
+    }
+
+    /**
+     * Pesudo-randomly alter the specified body part.
+     *
+     * @param part (not null)
+     */
+    void randomize(BodyPart part) {
+        List<String> known = knownGeometries(part);
+        String assetName = (String) generator.pick(known);
+        setGeometry(part, assetName);
     }
 
     /**

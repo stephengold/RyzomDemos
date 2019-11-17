@@ -245,6 +245,17 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
+     * Pseudo-randomly alter the configurations of all body parts.
+     */
+    void randomizeAllParts() {
+        for (BodyPart part : BodyPart.values()) {
+            character.randomize(part);
+        }
+
+        appInstance.updateCharacter();
+    }
+
+    /**
      * Update the selected animation, to ensure it's playable.
      *
      * @return the updated name

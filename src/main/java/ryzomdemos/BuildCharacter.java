@@ -272,6 +272,8 @@ public class BuildCharacter extends ActionApplication {
         dim.bind("previous value", KeyInput.KEY_MINUS);
         dim.bind("previous value", KeyInput.KEY_NUMPAD4);
 
+        dim.bind("randomize allParts", KeyInput.KEY_R);
+
         dim.bind("signal orbitLeft", KeyInput.KEY_A);
         dim.bind("signal orbitRight", KeyInput.KEY_D);
 
@@ -312,6 +314,10 @@ public class BuildCharacter extends ActionApplication {
                     return;
                 case "previous value":
                     characterGui.previousValue();
+                    return;
+
+                case "randomize allParts":
+                    characterGui.randomizeAllParts();
                     return;
 
                 case "toggle help":

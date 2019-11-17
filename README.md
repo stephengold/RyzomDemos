@@ -1,5 +1,5 @@
-The RyzomDemos project demonstrates how to load assets imported
-from the Ryzom Asset Repository using Alweth's `RyzomConverter`.
+The RyzomDemos project demonstrates how to use assets imported
+from the Ryzom Asset Repository by means of Alweth's `RyzomConverter`.
 
 ## BuildCharacter
 
@@ -23,6 +23,7 @@ You control `BuildCharacter` using hotkeys:
  + H : show/hide the help overlay
  + up/down : cycle through the properties
  + left/right : cycle through values for the selected property
+ + R : randomize all 7 body-part properties
  + W/A/S/D/Q/Z : dolly forward, orbit left, dolly back, orbit right, rise, fall
  + M : show/hide the character's meshes
  + V : show/hide the skeleton overlay
