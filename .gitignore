@@ -1,4 +1,7 @@
 /.gradle/
 /.nb-gradle/
-/assets/ryzom-assets/export
 /build/
+/private/
+/Written Assets/
+/*.dll
+/*.so
