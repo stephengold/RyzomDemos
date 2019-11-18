@@ -164,13 +164,13 @@ class Character {
 
     /**
      * Count how many geometry assets are known for specified part and the
-     * character's gender.
+     * character's gender. TODO remove
      *
      * @param part
      * @return count (&ge;0)
      */
     int countKnownGeometries(BodyPart part) {
-        List<String> known = knownGeometries(part);
+        List<String> known = knownGeometries(part, gender);
         int result = known.size();
 
         return result;
@@ -187,6 +187,9 @@ class Character {
 
     /**
      * Read the name of the geometry asset for the specified body part.
+     *
+     * @param part (not null)
+     * @return the asset name (without ".j3o")
      */
     String geometryName(BodyPart part) {
         String result = assets.get(part);
@@ -217,6 +220,27 @@ class Character {
     }
 
     /**
+     * Access the list of known geometry assets for the specified body part and
+     * gender.
+     *
+     * @param part (not null)
+     * @param genderCode "f" or "m"
+     * @return the pre-existing list of asset names (not null)
+     */
+    static List<String> knownGeometries(BodyPart part,
+            String genderCode) {
+        List<String> known;
+        if (genderCode.equals("m")) {
+            known = knownMaleAssets.get(part);
+        } else {
+            assert genderCode.equals("f") : genderCode;
+            known = knownFemaleAssets.get(part);
+        }
+
+        return known;
+    }
+
+    /**
      * Generate a ModelKey for the character's animation asset.
      *
      * @return a new key
@@ -231,7 +255,7 @@ class Character {
     }
 
     /**
-     * Generate a ModelKey for the specified part.
+     * Generate a ModelKey for the specified body part.
      *
      * @param part (not null)
      * @return a new key
@@ -246,18 +270,13 @@ class Character {
     }
 
     /**
-     * Select the next known asset for the specified body part in the selected
-     * gender.
+     * Select the next known asset for the specified body part in the
+     * character's gender.
      *
-     * @param part not null
+     * @param part (not null)
      */
     void nextAssetFor(BodyPart part) {
-        List<String> known;
-        if (gender.equals("m")) {
-            known = knownMaleAssets.get(part);
-        } else {
-            known = knownFemaleAssets.get(part);
-        }
+        List<String> known = knownGeometries(part, gender);
         int numKnown = known.size();
         assert numKnown > 0 : numKnown;
 
@@ -299,10 +318,8 @@ class Character {
                 BodyPart bodyPart = bodyPart(fileName, assetManager);
                 String assetName = fileName.replace(".j3o", "");
                 String gender = genderOfGeometryAsset(assetName);
-                EnumMap<BodyPart, List<String>> knownAssets = gender.equals("f")
-                        ? knownFemaleAssets
-                        : knownMaleAssets;
-                knownAssets.get(bodyPart).add(assetName);
+                List<String> known = knownGeometries(bodyPart, gender);
+                known.add(assetName);
             }
 
             ++progressCount;
@@ -317,6 +334,7 @@ class Character {
         for (BodyPart part : BodyPart.values()) {
             List<String> fList = knownFemaleAssets.get(part);
             Collections.sort(fList);
+
             List<String> mList = knownMaleAssets.get(part);
             Collections.sort(mList);
         }
@@ -324,12 +342,12 @@ class Character {
 
     /**
      * Select the previous geometry asset for the specified body part in the
-     * selected gender.
+     * character's gender.
      *
-     * @param part not null
+     * @param part (not null)
      */
     void previousAssetFor(BodyPart part) {
-        List<String> known = knownGeometries(part);
+        List<String> known = knownGeometries(part, gender);
         int numKnown = known.size();
         assert numKnown > 0 : numKnown;
 
@@ -357,7 +375,7 @@ class Character {
      * @param part (not null)
      */
     void randomize(BodyPart part) {
-        List<String> known = knownGeometries(part);
+        List<String> known = knownGeometries(part, gender);
         String assetName = (String) generator.pick(known);
         setGeometry(part, assetName);
     }
@@ -502,22 +520,5 @@ class Character {
         }
 
         return result;
-    }
-
-    /**
-     * Access the list of known geometry assets for the specified part and the
-     * character's gender.
-     *
-     * @param part (not null)
-     * @return the pre-existing list of asset names (not null)
-     */
-    private List<String> knownGeometries(BodyPart part) {
-        List<String> known;
-        if (gender.equals("m")) {
-            known = knownMaleAssets.get(part);
-        } else {
-            known = knownFemaleAssets.get(part);
-        }
-        return known;
     }
 }

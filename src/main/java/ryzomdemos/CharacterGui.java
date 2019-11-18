@@ -35,6 +35,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import jme3utilities.SimpleAppState;
 import jme3utilities.math.MyMath;
@@ -118,8 +119,7 @@ public class CharacterGui extends SimpleAppState {
      * @param numLines the number of lines to move downward
      */
     void advanceSelectedLine(int numLines) {
-        selectedLine = MyMath.modulo(selectedLine + numLines,
-                numStatusLines);
+        selectedLine = MyMath.modulo(selectedLine + numLines, numStatusLines);
     }
 
     /**
@@ -361,7 +361,8 @@ public class CharacterGui extends SimpleAppState {
             if (assetName == null) {
                 assetName = "(none)";
             }
-            int numKnown = character.countKnownGeometries(part);
+            List<String> known = Character.knownGeometries(part, gender);
+            int numKnown = known.size();
             text = String.format("%s(%d): %s", part, numKnown, assetName);
             updateStatusLine(firstPartStatusLine + part.ordinal(), text);
         }
