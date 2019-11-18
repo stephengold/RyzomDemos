@@ -118,18 +118,22 @@ class Character {
      * gender.
      *
      * @param name the name of an animation or asset (not null)
-     * @return an adjusted name
+     * @return an adjusted name (not null)
      */
     String adjustForGender(String name) {
         String result = name;
-
-        if (gender.equals("f") && result.contains("_hom_")) {
+        boolean isFemale = isFemale();
+        boolean isMale = isMale();
+        /*
+         * Make at most one substitution.
+         */
+        if (isFemale && result.contains("_hom_")) {
             result = result.replace("_hom_", "_hof_");
-        } else if (gender.equals("m") && result.contains("_hof_")) {
+        } else if (isMale && result.contains("_hof_")) {
             result = result.replace("_hof_", "_hom_");
-        } else if (gender.equals("f") && result.contains("_h_")) {
+        } else if (isFemale && result.contains("_h_")) {
             result = result.replace("_h_", "_f_");
-        } else if (gender.equals("m") && result.contains("_f_")) {
+        } else if (isMale && result.contains("_f_")) {
             result = result.replace("_f_", "_h_");
         }
 
@@ -207,6 +211,26 @@ class Character {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Test whether the character is female.
+     *
+     * @return true if female, otherwise false
+     */
+    boolean isFemale() {
+        boolean result = gender.equals("f");
+        return result;
+    }
+
+    /**
+     * Test whether the character is male.
+     *
+     * @return true if male, otherwise false
+     */
+    boolean isMale() {
+        boolean result = gender.equals("m");
+        return result;
     }
 
     /**
@@ -424,10 +448,10 @@ class Character {
      * Toggle the character's gender: masculine/feminine.
      */
     void toggleGender() {
-        if (gender.equals("f")) {
+        if (isFemale()) {
             setGender("m");
         } else {
-            assert gender.equals("m");
+            assert isMale();
             setGender("f");
         }
     }
