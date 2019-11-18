@@ -347,14 +347,15 @@ public class CharacterGui extends SimpleAppState {
                 numAnimations, animationName);
         updateStatusLine(animationStatusLine, text);
 
-        String gender = character.genderCode();
-        text = String.format("Gender(2): %s", gender);
+        String genderName = character.isFemale() ? "female" : "male";
+        text = String.format("Gender(2): %s", genderName);
         updateStatusLine(genderStatusLine, text);
 
         String group = character.groupName();
         text = String.format("SkeletalGroup(2): %s", group);
         updateStatusLine(groupStatusLine, text);
 
+        String gender = character.genderCode();
         for (BodyPart part : BodyPart.values()) {
             String assetName = character.geometryName(part);
             if (assetName == null) {
