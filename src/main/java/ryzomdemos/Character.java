@@ -47,6 +47,10 @@ class Character {
     // constants and loggers
 
     /**
+     * initial capacity for asset lists
+     */
+    final private static int initialCapacity = 120;
+    /**
      * message logger for this class
      */
     final public static Logger logger
@@ -154,26 +158,12 @@ class Character {
      */
     static void clearKnownGeometries() {
         for (BodyPart part : BodyPart.values()) {
-            List<String> fList = new ArrayList<>(32);
+            List<String> fList = new ArrayList<>(initialCapacity);
             knownFemaleAssets.put(part, fList);
 
-            List<String> mList = new ArrayList<>(32);
+            List<String> mList = new ArrayList<>(initialCapacity);
             knownMaleAssets.put(part, mList);
         }
-    }
-
-    /**
-     * Count how many geometry assets are known for specified part and the
-     * character's gender. TODO remove
-     *
-     * @param part
-     * @return count (&ge;0)
-     */
-    int countKnownGeometries(BodyPart part) {
-        List<String> known = knownGeometries(part, gender);
-        int result = known.size();
-
-        return result;
     }
 
     /**
@@ -240,7 +230,7 @@ class Character {
         List<String> result;
         result = map.get(part);
         if (result == null) { // lazy allocation of lists
-            result = new ArrayList<>(32);
+            result = new ArrayList<>(initialCapacity);
             map.put(part, result);
         }
 
