@@ -306,7 +306,6 @@ public class CharacterGui extends SimpleAppState {
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
-        Character.clearKnownGeometries();
         Character.preloadGeometries(assetManager);
 
         character.setGender("m");

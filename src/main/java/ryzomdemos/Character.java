@@ -225,19 +225,27 @@ class Character {
      *
      * @param part (not null)
      * @param genderCode "f" or "m"
-     * @return the pre-existing list of asset names (not null)
+     * @return an reference to the internal list of asset names (not null)
      */
     static List<String> knownGeometries(BodyPart part,
             String genderCode) {
-        List<String> known;
+        EnumMap<BodyPart, List<String>> map;
         if (genderCode.equals("m")) {
-            known = knownMaleAssets.get(part);
+            map = knownMaleAssets;
         } else {
             assert genderCode.equals("f") : genderCode;
-            known = knownFemaleAssets.get(part);
+            map = knownFemaleAssets;
         }
 
-        return known;
+        List<String> result;
+        result = map.get(part);
+        if (result == null) { // lazy allocation of lists
+            result = new ArrayList<>(32);
+            map.put(part, result);
+        }
+
+        assert result != null;
+        return result;
     }
 
     /**
