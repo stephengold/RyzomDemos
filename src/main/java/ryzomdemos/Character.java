@@ -367,32 +367,41 @@ class Character {
      *
      * @param part (not null)
      * @param assetName (may be null)
+     * @return this instance for chaining
      */
-    void setGeometry(BodyPart part, String assetName) {
+    Character setGeometry(BodyPart part, String assetName) {
         if (assetName != null) {
             assert assetExists(assetName);
         }
         assets.put(part, assetName);
+
+        return this;
     }
 
     /**
      * Alter the character's gender.
      *
      * @param code "f" or "m"
+     * @return this instance for chaining
      */
-    void setGender(String code) {
+    Character setGender(String code) {
         assert code.equals("m") || code.equals("f") : code;
         gender = code;
+
+        return this;
     }
 
     /**
-     * Alter the character's gender.
+     * Alter the character's skeletal group.
      *
      * @param name "ca" or "ge"
+     * @return this instance for chaining
      */
-    void setGroup(String name) {
+    Character setGroup(String name) {
         assert name.equals("ca") || name.equals("ge") : name;
         group = name;
+
+        return this;
     }
 
     /**
