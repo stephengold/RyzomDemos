@@ -347,23 +347,29 @@ public class CharacterGui extends SimpleAppState {
         super.update(tpf);
 
         List<String> nameList = knownAnimations();
+        int index = 1 + Collections.binarySearch(nameList, animationName);
         int count = nameList.size();
-        String text = String.format("Animation(%d): %s",
-                count, animationName);
+        String text = String.format("Animation #%d of %d: %s",
+                index, count, animationName);
         updateStatusLine(animationStatusLine, text);
 
         String genderName = character.isFemale() ? "female" : "male";
-        text = String.format("Gender(2): %s", genderName);
+        index = character.isFemale() ? 1 : 2;
+        text = String.format("Gender #%d of 2: %s", index, genderName);
         updateStatusLine(genderStatusLine, text);
 
         String group = character.groupName();
-        text = String.format("SkeletalGroup(2): %s", group);
+        index = 1 + Arrays.binarySearch(Character.groupNameArray, group);
+        count = Character.groupNameArray.length;
+        text = String.format("SkeletalGroup #%d of %d: %s",
+                index, count, group);
         updateStatusLine(groupStatusLine, text);
 
         String[] keywordArray = knownKeywords();
-        int numKeywords = keywordArray.length;
-        text = String.format("AnimationKeyword(%d): %s",
-                numKeywords, animationKeyword);
+        index = 1 + Arrays.binarySearch(keywordArray, animationKeyword);
+        count = keywordArray.length;
+        text = String.format("AnimationKeyword #%d of %d: %s",
+                index, count, animationKeyword);
         updateStatusLine(keywordStatusLine, text);
 
         String genderCode = character.genderCode();
@@ -373,8 +379,10 @@ public class CharacterGui extends SimpleAppState {
             if (assetName == null) {
                 text = String.format("%s: <none>", part);
             } else {
+                index = 1 + Collections.binarySearch(known, assetName);
                 count = known.size();
-                text = String.format("%s(%d): %s", part, count, assetName);
+                text = String.format("%s #%d of %d: %s",
+                        part, index, count, assetName);
             }
             updateStatusLine(firstPartStatusLine + part.ordinal(), text);
         }
