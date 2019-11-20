@@ -26,14 +26,19 @@
  */
 package ryzomdemos;
 
+import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.scene.Spatial;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import jme3utilities.math.noise.Generator;
 
@@ -72,6 +77,12 @@ class Character {
     // *************************************************************************
     // fields
 
+    /**
+     * all known animation names: key = groupName + genderCode, each array
+     * sorted lexicographically
+     */
+    final private static Map<String, String[]> knownAnimations
+            = new TreeMap<>();
     /**
      * all known geometry assets for female characters, each list sorted
      * lexicographically
@@ -242,6 +253,23 @@ class Character {
     }
 
     /**
+     * Access the sorted array of known animation names for the specified gender
+     * and skeletal group.
+     *
+     * @param groupName "ca" or "ge"
+     * @param genderCode "f" for female or "m" for male
+     * @return the pre-existing array of names (not null, in lexicographic
+     * order)
+     */
+    static String[] knownAnimations(String groupName, String genderCode) {
+        String key = groupName + genderCode;
+        String[] result = knownAnimations.get(key);
+
+        assert result != null;
+        return result;
+    }
+
+    /**
      * Access the sorted list of known geometry assets for the specified body
      * part and gender. TODO return an array
      *
@@ -331,7 +359,9 @@ class Character {
 
     /**
      * Preload all assets in the specified directory. Assign each geometries
-     * asset to a list based on its body part and gender.
+     * asset to a list based on its body part and gender. Also build lists of
+     * animation names for each skeletal group and gender. TODO rename
+     * preloadAssets
      *
      * @param assetManager the assetManager to use (not null)
      */
@@ -352,6 +382,14 @@ class Character {
                 String gender = genderOfGeometryAsset(assetName);
                 List<String> known = knownGeometries(bodyPart, gender);
                 known.add(assetName);
+
+            } else if (fileName.matches("^animations_.*$")) {
+                // animations asset
+                String[] animations = listAnimations(fileName, assetManager);
+                String genderCode = fileName.substring(16, 17);
+                String groupName = fileName.substring(11, 13);
+                String key = groupName + genderCode;
+                knownAnimations.put(key, animations);
             }
 
             ++progressCount;
@@ -550,6 +588,37 @@ class Character {
             throw new RuntimeException(msg);
         }
 
+        return result;
+    }
+
+    /**
+     * Enumerate all animation names for the specified skeletal group and
+     * gender.
+     *
+     * @param fileName
+     * @return a new vector of names in lexicographic order
+     */
+    private static String[] listAnimations(String fileName,
+            AssetManager assetManager) {
+        String genderCode = fileName.substring(16, 17);
+        String groupName = fileName.substring(11, 13);
+        assert String.format("animations_%s_ho%s.j3o",
+                groupName, genderCode).equals(fileName);
+
+        String assetPath = assetPathPrefix + fileName;
+        ModelKey modelKey = new ModelKey(assetPath);
+        Spatial loadedNode = assetManager.loadAsset(modelKey);
+        AnimControl animControl
+                = loadedNode.getControl(AnimControl.class);
+        Collection<String> animationNames = animControl.getAnimationNames();
+
+        int numAnimations = animationNames.size();
+        String[] result = new String[numAnimations];
+        animationNames.toArray(result);
+        Arrays.sort(result);
+
+        assert SortUtil.isSorted(result);
+        assert result != null;
         return result;
     }
 
