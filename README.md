@@ -5,7 +5,7 @@ from the Ryzom Asset Repository by means of Alweth's `RyzomConverter`.
 
 The `BuildCharacter` application allows you to configure a humanoid character,
 select an animation, and see the results in real time.
-The number of possible configurations exceeds 10^9.
+The number of possible body configurations exceeds 6 x 10^11.
 
   1. Install and convert the asset repository
      by following the suggested procedure
