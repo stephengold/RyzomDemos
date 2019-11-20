@@ -36,6 +36,10 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import jme3utilities.SimpleAppState;
 import jme3utilities.math.MyMath;
@@ -97,6 +101,12 @@ public class CharacterGui extends SimpleAppState {
      * index of the status line selected for editing
      */
     private int selectedLine = 0;
+    /**
+     * all known animation keywords: key = groupName + genderCode, each array
+     * sorted lexicographically
+     */
+    final private static Map<String, String[]> knownKeywords
+            = new TreeMap<>();
     /**
      * name of the Animation to play
      */
@@ -269,6 +279,7 @@ public class CharacterGui extends SimpleAppState {
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
         Character.preloadGeometries(assetManager);
+        populateKeywords();
 
         character.setGender("m");
         character.setGroup("ca");
@@ -282,7 +293,7 @@ public class CharacterGui extends SimpleAppState {
 
         animationName = "ca_hom_co_course";
         /*
-         * Add the status lines to the GUI.
+         * Add the status lines to the guiNode.
          */
         for (int i = 0; i < numStatusLines; ++i) {
             statusLines[i] = new BitmapText(guiFont, false);
@@ -349,6 +360,39 @@ public class CharacterGui extends SimpleAppState {
         }
 
         appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Populate the arrays of known animation keywords.
+     */
+    private void populateKeywords() {
+        for (String groupName : Character.groupNameArray) {
+            for (String genderCode : Character.genderCodeArray) {
+                Set<String> keywordSet = new TreeSet<>();
+                String[] nameArray
+                        = Character.knownAnimations(groupName, genderCode);
+                for (String name : nameArray) {
+                    String[] words = name.split("_");
+                    for (String word : words) {
+                        // trim trailing digits
+                        while (word.matches("^.+[0-9]$")) {
+                            word = word.substring(0, word.length() - 1);
+                        }
+
+                        if (word.length() >= 3) {
+                            keywordSet.add(word);
+                        }
+                    }
+                }
+                int numKeywords = keywordSet.size();
+                String[] keywords = new String[numKeywords];
+                keywordSet.toArray(keywords);
+                assert SortUtil.isSorted(keywords);
+
+                String key = groupName + genderCode;
+                knownKeywords.put(key, keywords);
+            }
+        }
     }
 
     /**
