@@ -26,26 +26,15 @@
  */
 package ryzomdemos;
 
-import com.jme3.animation.AnimControl;
-import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
-import com.jme3.scene.Spatial;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
-import jme3utilities.math.noise.Generator;
 
 /**
  * Describe a character that's constructed out of assets imported from the Ryzom
- * Asset Repository by Alweth's RyzomConverter. TODO make Cloneable and Savable,
- * move static portions to new classes
+ * Asset Repository by Alweth's RyzomConverter. TODO make Cloneable and Savable
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -54,64 +43,18 @@ class Character {
     // constants and loggers
 
     /**
-     * initial capacity for asset lists
-     */
-    final private static int initialCapacity = 120; // TODO Set -> List
-    /**
-     * status interval (in nanoseconds)
-     */
-    final private static int statusInterval = 1_000_000_000;
-    /**
      * message logger for this class
      */
     final public static Logger logger
             = Logger.getLogger(Character.class.getName());
-    /**
-     * prefix for asset paths of converted assets
-     */
-    final static String assetPathPrefix = "/ryzom-assets/export/";
-    /**
-     * filesystem path to the asset root
-     */
-    final static String assetRoot = "../RyzomConverter/assets";
-    /**
-     * all gender codes
-     */
-    final static String[] genderCodeArray = {"f", "m"};
-    /**
-     * all skeletal-group names
-     */
-    final static String[] groupNameArray = {"ca", "ge"};
     // *************************************************************************
     // fields
 
-    /**
-     * all known animation names: key = groupName + genderCode, each array
-     * sorted lexicographically
-     */
-    final private static Map<String, String[]> knownAnimations
-            = new TreeMap<>();
-    /**
-     * all known geometry assets for female characters, each list sorted
-     * lexicographically
-     */
-    final private static EnumMap<BodyPart, List<String>> knownFemaleAssets
-            = new EnumMap<>(BodyPart.class);
-    /**
-     * all known geometry assets for male characters, each list sorted
-     * lexicographically
-     */
-    final private static EnumMap<BodyPart, List<String>> knownMaleAssets
-            = new EnumMap<>(BodyPart.class);
     /**
      * geometry assets used in the character (one asset per body part)
      */
     final private EnumMap<BodyPart, String> assets
             = new EnumMap<>(BodyPart.class);
-    /**
-     * pseudo-random generator
-     */
-    final private static Generator generator = new Generator();
     /**
      * 1-letter code for the character's gender ("f" for female or "m" for male)
      */
@@ -132,7 +75,7 @@ class Character {
             String assetName = geometryName(part);
             if (assetName != null) {
                 assetName = adjustForGender(assetName);
-                if (!assetExists(assetName)) {
+                if (!RyzomUtil.assetExists(assetName)) {
                     assetName = null;
                 }
                 setGeometry(part, assetName);
@@ -165,36 +108,6 @@ class Character {
         }
 
         return result;
-    }
-
-    /**
-     * Test whether the named asset exists (among converted assets in the
-     * filesystem). Works for both animation assets and geometry assets.
-     *
-     * @param assetName (not null)
-     * @return true if found, otherwise false
-     */
-    static boolean assetExists(String assetName) {
-        String fileName = assetName + ".j3o";
-        String assetPath = assetPathPrefix + fileName;
-        String filePath = assetRoot + assetPath;
-        File file = new File(filePath);
-        boolean result = file.exists();
-
-        return result;
-    }
-
-    /**
-     * Clear all lists of known geometry assets. TODO delete
-     */
-    static void clearKnownGeometries() {
-        for (BodyPart part : BodyPart.values()) {
-            List<String> fList = new ArrayList<>(initialCapacity);
-            knownFemaleAssets.put(part, fList);
-
-            List<String> mList = new ArrayList<>(initialCapacity);
-            knownMaleAssets.put(part, mList);
-        }
     }
 
     /**
@@ -261,53 +174,6 @@ class Character {
     }
 
     /**
-     * Access the sorted array of known animation names for the specified gender
-     * and skeletal group.
-     *
-     * @param groupName "ca" or "ge"
-     * @param genderCode "f" for female or "m" for male
-     * @return the pre-existing array of names (not null, in lexicographic
-     * order)
-     */
-    static String[] knownAnimations(String groupName, String genderCode) {
-        String key = groupName + genderCode;
-        String[] result = knownAnimations.get(key);
-
-        assert result != null;
-        return result;
-    }
-
-    /**
-     * Access the sorted list of known geometry assets for the specified body
-     * part and gender. TODO return an array
-     *
-     * @param part (not null)
-     * @param genderCode "f" for female or "m" for male
-     * @return the internal list of asset names (not null, in lexicographic
-     * order)
-     */
-    static List<String> knownGeometries(BodyPart part,
-            String genderCode) {
-        EnumMap<BodyPart, List<String>> map;
-        if (genderCode.equals("m")) {
-            map = knownMaleAssets;
-        } else {
-            assert genderCode.equals("f") : genderCode;
-            map = knownFemaleAssets;
-        }
-
-        List<String> result = map.get(part);
-        if (result == null) { // lazy allocation of lists
-            result = new ArrayList<>(initialCapacity);
-            map.put(part, result);
-        }
-
-        assert SortUtil.isSorted(result);
-        assert result != null;
-        return result;
-    }
-
-    /**
      * Generate a ModelKey for the character's animation asset.
      *
      * @return a new key
@@ -315,7 +181,7 @@ class Character {
     ModelKey makeAnimationAssetKey() {
         String fileName
                 = String.format("animations_%s_ho%s.j3o", group, gender);
-        String assetPath = assetPathPrefix + fileName;
+        String assetPath = RyzomUtil.assetPathPrefix + fileName;
         ModelKey key = new ModelKey(assetPath);
 
         return key;
@@ -330,7 +196,7 @@ class Character {
     ModelKey makeGeometryAssetKey(BodyPart part) {
         String assetName = geometryName(part);
         String fileName = assetName + ".j3o";
-        String assetPath = assetPathPrefix + fileName;
+        String assetPath = RyzomUtil.assetPathPrefix + fileName;
         ModelKey key = new ModelKey(assetPath);
 
         return key;
@@ -343,7 +209,7 @@ class Character {
      * @param part (not null)
      */
     void nextAssetFor(BodyPart part) {
-        List<String> known = knownGeometries(part, gender);
+        List<String> known = RyzomUtil.knownGeometries(part, gender);
         int numKnown = known.size();
         assert numKnown > 0 : numKnown;
 
@@ -366,65 +232,13 @@ class Character {
     }
 
     /**
-     * Preload all assets in the specified directory. Assign each geometries
-     * asset to a list based on its body part and gender. Also build lists of
-     * animation names for each skeletal group and gender. TODO rename
-     * preloadAssets
-     *
-     * @param assetManager the assetManager to use (not null)
-     */
-    static void preloadGeometries(AssetManager assetManager) {
-        String directoryPath = assetRoot + assetPathPrefix;
-        File directory = new File(directoryPath);
-        assert directory.isDirectory();
-        String[] fileNames = directory.list();
-        int numFiles = fileNames.length;
-
-        int progressCount = 0;
-        long nextStatus = System.nanoTime();
-        for (String fileName : fileNames) {
-            if (fileName.matches("^(ca|fy|ge|ma|tr|zo).*$")) {
-                // geometries asset
-                BodyPart bodyPart = bodyPart(fileName, assetManager);
-                String assetName = fileName.replace(".j3o", "");
-                String gender = genderOfGeometryAsset(assetName);
-                List<String> known = knownGeometries(bodyPart, gender);
-                known.add(assetName);
-
-            } else if (fileName.matches("^animations_.*$")) {
-                // animations asset
-                String[] animations = listAnimations(fileName, assetManager);
-                String genderCode = fileName.substring(16, 17);
-                String groupName = fileName.substring(11, 13);
-                String key = groupName + genderCode;
-                knownAnimations.put(key, animations);
-            }
-
-            ++progressCount;
-            if (System.nanoTime() >= nextStatus) {
-                printStatus(progressCount, numFiles);
-                nextStatus = System.nanoTime() + statusInterval;
-            }
-        }
-        printStatus(progressCount, numFiles);
-
-        for (BodyPart part : BodyPart.values()) {
-            List<String> fList = knownFemaleAssets.get(part);
-            Collections.sort(fList);
-
-            List<String> mList = knownMaleAssets.get(part);
-            Collections.sort(mList);
-        }
-    }
-
-    /**
      * Select the previous geometry asset for the specified body part to match
      * the character's gender.
      *
      * @param part (not null)
      */
     void previousAssetFor(BodyPart part) {
-        List<String> known = knownGeometries(part, gender);
+        List<String> known = RyzomUtil.knownGeometries(part, gender);
         int numKnown = known.size();
         assert numKnown > 0 : numKnown;
 
@@ -452,13 +266,14 @@ class Character {
      * @param part (not null)
      */
     void randomize(BodyPart part) {
-        List<String> known = knownGeometries(part, gender);
-        String assetName = (String) generator.pick(known);
+        List<String> known = RyzomUtil.knownGeometries(part, gender);
+        String assetName = (String) RyzomUtil.generator.pick(known);
         setGeometry(part, assetName);
     }
 
     /**
-     * Alter the geometry asset for the specified body part.
+     * Alter the geometry asset for the specified body part. TODO re-order
+     * methods
      *
      * @param part (not null)
      * @param assetName (may be null)
@@ -466,7 +281,7 @@ class Character {
      */
     Character setGeometry(BodyPart part, String assetName) {
         if (assetName != null) {
-            assert assetExists(assetName);
+            assert RyzomUtil.assetExists(assetName);
         }
         assets.put(part, assetName);
 
@@ -521,120 +336,5 @@ class Character {
             assert group.equals("ge");
             setGroup("ca");
         }
-    }
-    // *************************************************************************
-    // private methods
-
-    /**
-     * Determine the appropriate body part for a geometry asset.
-     *
-     * @param fileName the filename of the asset (ending in ".j3o")
-     * @param assetManager (not null)
-     * @return an enum value (not null)
-     */
-    private static BodyPart bodyPart(String fileName,
-            AssetManager assetManager) {
-        assert fileName.endsWith(".j3o");
-
-        String assetPath = assetPathPrefix + fileName;
-        ModelKey key = new ModelKey(assetPath);
-        Spatial geometries = assetManager.loadAsset(key);
-        String partName = geometries.getUserData("ryzom_part");
-
-        BodyPart result;
-        switch (partName) {
-            case "ARMOR_ARMPADS":
-                result = BodyPart.Arms;
-                break;
-            case "ARMOR_BOOTS":
-                result = BodyPart.Feet;
-                break;
-            case "ARMOR_CHEST":
-                result = BodyPart.Torso;
-                break;
-            case "ARMOR_HANDS":
-            case "GAUNTLET":
-                result = BodyPart.Hands;
-                break;
-            case "ARMOR_PANTS":
-                result = BodyPart.Legs;
-                break;
-            case "FACE":
-                result = BodyPart.Face;
-                break;
-            case "ARMOR_HELMET":
-            case "HAIR":
-                result = BodyPart.Head;
-                break;
-            default:
-                throw new RuntimeException("partName=" + partName);
-        }
-
-        assert result != null;
-        return result;
-    }
-
-    /**
-     * Infer the gender of a geometry asset from its name.
-     *
-     * @param assetName (not null, not empty)
-     * @return "f" for female or "m" for male
-     */
-    private static String genderOfGeometryAsset(String assetName) {
-        String result;
-        String g3 = assetName.substring(3, 6);
-        if (g3.equals("hof")) {
-            result = "f";
-        } else if (g3.equals("hom")) {
-            result = "m";
-        } else if (assetName.contains("_f_")) {
-            result = "f";
-        } else if (assetName.contains("_h_")) {
-            result = "m";
-        } else {
-            String msg = "assetName=" + assetName;
-            throw new RuntimeException(msg);
-        }
-
-        return result;
-    }
-
-    /**
-     * Enumerate all animation names for the specified skeletal group and
-     * gender.
-     *
-     * @param fileName
-     * @return a new vector of names in lexicographic order
-     */
-    private static String[] listAnimations(String fileName,
-            AssetManager assetManager) {
-        String genderCode = fileName.substring(16, 17);
-        String groupName = fileName.substring(11, 13);
-        assert String.format("animations_%s_ho%s.j3o",
-                groupName, genderCode).equals(fileName);
-
-        String assetPath = assetPathPrefix + fileName;
-        ModelKey modelKey = new ModelKey(assetPath);
-        Spatial loadedNode = assetManager.loadAsset(modelKey);
-        AnimControl animControl
-                = loadedNode.getControl(AnimControl.class);
-        Collection<String> animationNames = animControl.getAnimationNames();
-
-        int numAnimations = animationNames.size();
-        String[] result = new String[numAnimations];
-        animationNames.toArray(result);
-        Arrays.sort(result);
-
-        assert SortUtil.isSorted(result);
-        assert result != null;
-        return result;
-    }
-
-    private static void printStatus(int progressCount, int numFiles) {
-        float percentage = (100f * progressCount) / numFiles;
-        String msg = String.format("%d of %d files analyzed (%.0f%%)",
-                progressCount, numFiles, percentage);
-        System.out.println(msg);
-        System.out.flush();
     }
 }

@@ -194,7 +194,7 @@ public class BuildCharacter extends ActionApplication {
         stateManager.getState(StatsAppState.class).toggleStats();
         addBox();
 
-        Locators.registerFilesystem(Character.assetRoot);
+        Locators.registerFilesystem(RyzomUtil.assetRoot);
 
         characterGui = new CharacterGui();
         stateManager.attach(characterGui);

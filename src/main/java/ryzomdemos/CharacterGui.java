@@ -308,7 +308,7 @@ public class CharacterGui extends SimpleAppState {
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
-        Character.preloadGeometries(assetManager);
+        RyzomUtil.preloadGeometries(assetManager);
         populateKeywords();
 
         character.setGender("m");
@@ -359,8 +359,8 @@ public class CharacterGui extends SimpleAppState {
         updateStatusLine(genderStatusLine, text);
 
         String group = character.groupName();
-        index = 1 + Arrays.binarySearch(Character.groupNameArray, group);
-        count = Character.groupNameArray.length;
+        index = 1 + Arrays.binarySearch(RyzomUtil.groupNameArray, group);
+        count = RyzomUtil.groupNameArray.length;
         text = String.format("SkeletalGroup #%d of %d: %s",
                 index, count, group);
         updateStatusLine(groupStatusLine, text);
@@ -374,7 +374,7 @@ public class CharacterGui extends SimpleAppState {
 
         String genderCode = character.genderCode();
         for (BodyPart part : BodyPart.values()) {
-            List<String> known = Character.knownGeometries(part, genderCode);
+            List<String> known = RyzomUtil.knownGeometries(part, genderCode);
             String assetName = character.geometryName(part);
             if (assetName == null) {
                 text = String.format("%s: <none>", part);
@@ -399,7 +399,7 @@ public class CharacterGui extends SimpleAppState {
     private List<String> knownAnimations() {
         String groupName = character.groupName();
         String genderCode = character.genderCode();
-        String[] allNames = Character.knownAnimations(groupName, genderCode);
+        String[] allNames = RyzomUtil.knownAnimations(groupName, genderCode);
 
         String substring;
         if (animationKeyword == null) {
@@ -500,11 +500,11 @@ public class CharacterGui extends SimpleAppState {
      * Populate the arrays of known animation keywords.
      */
     private void populateKeywords() {
-        for (String groupName : Character.groupNameArray) {
-            for (String genderCode : Character.genderCodeArray) {
+        for (String groupName : RyzomUtil.groupNameArray) {
+            for (String genderCode : RyzomUtil.genderCodeArray) {
                 Set<String> keywordSet = new TreeSet<>();
                 String[] nameArray
-                        = Character.knownAnimations(groupName, genderCode);
+                        = RyzomUtil.knownAnimations(groupName, genderCode);
                 for (String name : nameArray) {
                     String[] words = name.split("_");
                     for (String word : words) {
