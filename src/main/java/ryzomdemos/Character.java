@@ -38,7 +38,9 @@ import java.util.logging.Logger;
 import jme3utilities.math.noise.Generator;
 
 /**
- * Encapsulate the properties of a character model.
+ * Describe a character that's constructed out of assets imported from the Ryzom
+ * Asset Repository by Alweth's RyzomConverter. TODO make Cloneable and Savable,
+ * move static portions to new classes
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -49,7 +51,7 @@ class Character {
     /**
      * initial capacity for asset lists
      */
-    final private static int initialCapacity = 120;
+    final private static int initialCapacity = 120; // TODO Set -> List
     /**
      * message logger for this class
      */
@@ -67,12 +69,14 @@ class Character {
     // fields
 
     /**
-     * all known geometry assets for female characters
+     * all known geometry assets for female characters, each list sorted
+     * lexicographically
      */
     final private static EnumMap<BodyPart, List<String>> knownFemaleAssets
             = new EnumMap<>(BodyPart.class);
     /**
-     * all known geometry assets for male characters
+     * all known geometry assets for male characters, each list sorted
+     * lexicographically
      */
     final private static EnumMap<BodyPart, List<String>> knownMaleAssets
             = new EnumMap<>(BodyPart.class);
@@ -86,7 +90,7 @@ class Character {
      */
     final private static Generator generator = new Generator();
     /**
-     * 1-letter code for the character's gender ("f" or "m")
+     * 1-letter code for the character's gender ("f" for female or "m" for male)
      */
     private String gender = "m";
     /**
@@ -158,7 +162,7 @@ class Character {
     }
 
     /**
-     * Clear all lists of known geometry assets.
+     * Clear all lists of known geometry assets. TODO delete
      */
     static void clearKnownGeometries() {
         for (BodyPart part : BodyPart.values()) {
@@ -173,7 +177,7 @@ class Character {
     /**
      * Read the character's gender.
      *
-     * @return "f" or "m"
+     * @return "f" for female or "m" for male
      */
     String genderCode() {
         return gender;
@@ -234,12 +238,13 @@ class Character {
     }
 
     /**
-     * Access the list of known geometry assets for the specified body part and
-     * gender.
+     * Access the sorted list of known geometry assets for the specified body
+     * part and gender. TODO return an array
      *
      * @param part (not null)
-     * @param genderCode "f" or "m"
-     * @return an reference to the internal list of asset names (not null)
+     * @param genderCode "f" for female or "m" for male
+     * @return the internal list of asset names (not null, in lexicographic
+     * order)
      */
     static List<String> knownGeometries(BodyPart part,
             String genderCode) {
@@ -292,7 +297,7 @@ class Character {
     }
 
     /**
-     * Select the next known asset for the specified body part in the
+     * Select the next known asset for the specified body part to match the
      * character's gender.
      *
      * @param part (not null)
@@ -321,11 +326,10 @@ class Character {
     }
 
     /**
-     * Preload all geometry assets in the specified directory and analyze them,
-     * assigning each one to a list based on its body part and gender.
+     * Preload all assets in the specified directory. Assign each geometries
+     * asset to a list based on its body part and gender.
      *
      * @param assetManager the assetManager to use (not null)
-     * @param directoryPath the filesystem path to the directory (not null)
      */
     static void preloadGeometries(AssetManager assetManager) {
         String directoryPath = assetRoot + assetPathPrefix;
@@ -337,6 +341,7 @@ class Character {
         int progressCount = 0;
         for (String fileName : fileNames) {
             if (fileName.matches("^(ca|fy|ge|ma|tr|zo).*$")) {
+                // geometries asset
                 BodyPart bodyPart = bodyPart(fileName, assetManager);
                 String assetName = fileName.replace(".j3o", "");
                 String gender = genderOfGeometryAsset(assetName);
@@ -363,8 +368,8 @@ class Character {
     }
 
     /**
-     * Select the previous geometry asset for the specified body part in the
-     * character's gender.
+     * Select the previous geometry asset for the specified body part to match
+     * the character's gender.
      *
      * @param part (not null)
      */
@@ -392,7 +397,7 @@ class Character {
     }
 
     /**
-     * Pesudo-randomly alter the specified body part.
+     * Pseudo-randomly alter the geometry asset for the specified body part.
      *
      * @param part (not null)
      */
@@ -421,7 +426,7 @@ class Character {
     /**
      * Alter the character's gender.
      *
-     * @param code "f" or "m"
+     * @param code "f" for female or "m" for male
      * @return this instance for chaining
      */
     Character setGender(String code) {
@@ -522,7 +527,7 @@ class Character {
     /**
      * Infer the gender of a geometry asset from its name.
      *
-     * @param assetName
+     * @param assetName (not null, not empty)
      * @return "f" for female or "m" for male
      */
     private static String genderOfGeometryAsset(String assetName) {

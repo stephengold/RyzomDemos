@@ -93,7 +93,7 @@ public class BuildCharacter extends ActionApplication {
      */
     private AnimChannel animChannel = null;
     /**
-     * update GUI for character construction
+     * AppState to manage the user-interface overlay
      */
     private CharacterGui characterGui;
     /**
@@ -105,15 +105,15 @@ public class BuildCharacter extends ActionApplication {
      */
     private Material greenMaterial;
     /**
-     * main node of the loaded character model
+     * main Node of the loaded character model
      */
     private Node characterNode;
     /**
-     * node for displaying hotkey help/hints in the GUI
+     * hotkey help/hints overlay
      */
     private Node helpNode;
     /**
-     * skeleton visualizer for the loaded character model
+     * visualize the Skeleton of the loaded character model
      */
     private SkeletonVisualizer sv;
     // *************************************************************************
@@ -136,7 +136,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Count how many animations ther are for the loaded character.
+     * Count how many animations there are for the loaded character.
      *
      * @return the count (&ge;0)
      */
@@ -194,7 +194,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Play the named animation immediately (no blending).
+     * Play the named Animation immediately (no blending).
      *
      * @param animationName (not null)
      */
@@ -204,13 +204,13 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Add the configured character to the scene, removing any pre-existing one.
+     * Add the configured Character to the scene, removing any pre-existing one.
      */
     void updateCharacter() {
         unloadCharacter();
         attachCharacter();
         /*
-         * Update the selected animation and play it.
+         * Update the selected Animation and play it.
          */
         AnimControl animControl = characterNode.getControl(AnimControl.class);
         String animationName = characterGui.updateAnimationName();
@@ -229,7 +229,7 @@ public class BuildCharacter extends ActionApplication {
     // ActionApplication methods
 
     /**
-     * Initialize this application.
+     * Initialize this Application.
      */
     @Override
     public void actionInitializeApplication() {
@@ -288,7 +288,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Process an action that wasn't handled by the active input mode.
+     * Process an action that wasn't handled by the active InputMode.
      *
      * @param actionString textual description of the action (not null)
      * @param ongoing true if the action is ongoing, otherwise false
@@ -341,7 +341,7 @@ public class BuildCharacter extends ActionApplication {
     // private methods
 
     /**
-     * Attach a large static box to the scene, to serve as a platform.
+     * Attach a large static Box to the scene, to serve as a platform.
      */
     private void addBox() {
         float halfExtent = 50f; // mesh units
@@ -390,7 +390,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Load the configured character model and attach it to the scene.
+     * Load the model of the configured Character and attach it to the scene.
      */
     private void attachCharacter() {
         /*
@@ -414,7 +414,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Configure the camera during startup.
+     * Configure the Camera during startup.
      */
     private void configureCamera() {
         float near = 0.02f;
@@ -477,7 +477,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Toggle the animation: paused/running.
+     * Toggle the Animation: paused/running.
      */
     private void togglePause() {
         float newSpeed = (speed > 1e-12f) ? 1e-12f : 1f;
@@ -485,7 +485,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Toggle the skeleton visualizer on/off.
+     * Toggle the SkeletonVisualizer on/off.
      */
     private void toggleSkeleton() {
         boolean enabled = sv.isEnabled();
@@ -493,7 +493,7 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * If the scene contains a character, remove it.
+     * If the scene contains a character model, remove it.
      */
     private void unloadCharacter() {
         if (characterNode != null) {

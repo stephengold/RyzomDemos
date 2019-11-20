@@ -81,8 +81,8 @@ public class CharacterGui extends SimpleAppState {
     // fields
 
     /**
-     * lines of text displayed in the upper-left corner of the GUI ([0] is the
-     * top line)
+     * lines of text displayed in the upper-left corner of the display ([0] is
+     * the top line)
      */
     final private BitmapText[] statusLines = new BitmapText[numStatusLines];
     /**
@@ -90,7 +90,7 @@ public class CharacterGui extends SimpleAppState {
      */
     private BuildCharacter appInstance;
     /**
-     * configured character
+     * configured Character, including its gender and geometry assets
      */
     final private Character character = new Character();
     /**
@@ -208,7 +208,7 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
-     * Pseudo-randomly alter the configurations of all body parts.
+     * Pseudo-randomly select body-part assets.
      */
     void randomizeAllParts() {
         for (BodyPart part : BodyPart.values()) {
