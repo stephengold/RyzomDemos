@@ -298,7 +298,7 @@ public class CharacterGui extends SimpleAppState {
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
-        RyzomUtil.preloadGeometries(assetManager);
+        RyzomUtil.preloadAssets(assetManager);
 
         character.setGender("m");
         character.setGroup("ca");

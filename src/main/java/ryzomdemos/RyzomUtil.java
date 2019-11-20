@@ -199,14 +199,13 @@ class RyzomUtil {
     }
 
     /**
-     * Preload all assets in the specified directory. Assign each geometries
+     * Preload all assets in the converted directory. Assign each geometries
      * asset to a list based on its body part and gender. Also build lists of
-     * animation names for each skeletal group and gender. TODO rename
-     * preloadAssets
+     * animation names for each skeletal group and gender.
      *
      * @param assetManager the assetManager to use (not null)
      */
-    static void preloadGeometries(AssetManager assetManager) {
+    static void preloadAssets(AssetManager assetManager) {
         String directoryPath = assetRoot + assetPathPrefix;
         File directory = new File(directoryPath);
         assert directory.isDirectory();
