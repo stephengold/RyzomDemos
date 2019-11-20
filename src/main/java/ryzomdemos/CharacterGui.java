@@ -162,25 +162,6 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
-     * Select and play the next animation.
-     */
-    void nextAnimation() {
-        String[] nameArray = appInstance.listAnimationsSorted();
-        int lastIndex = nameArray.length - 1;
-        int arrIndex = Arrays.binarySearch(nameArray, animationName);
-
-        if (arrIndex < 0) {
-            animationName = nameArray[0];
-        } else if (arrIndex >= lastIndex) {
-            animationName = nameArray[0];
-        } else {
-            animationName = nameArray[arrIndex + 1];
-        }
-
-        appInstance.setAnim(animationName);
-    }
-
-    /**
      * Determine the next value for the selected status line.
      */
     void nextValue() {
@@ -201,25 +182,6 @@ public class CharacterGui extends SimpleAppState {
         }
 
         appInstance.updateCharacter();
-    }
-
-    /**
-     * Select and play the previous animation.
-     */
-    void previousAnimation() {
-        String[] nameArray = appInstance.listAnimationsSorted();
-        int lastIndex = nameArray.length - 1;
-        int arrIndex = Arrays.binarySearch(nameArray, animationName);
-
-        if (arrIndex < 0) {
-            animationName = nameArray[lastIndex];
-        } else if (arrIndex == 0) {
-            animationName = nameArray[lastIndex];
-        } else {
-            animationName = nameArray[arrIndex - 1];
-        }
-
-        appInstance.setAnim(animationName);
     }
 
     /**
@@ -369,6 +331,44 @@ public class CharacterGui extends SimpleAppState {
     }
     // *************************************************************************
     // private methods
+
+    /**
+     * Select and play the next animation.
+     */
+    private void nextAnimation() {
+        String[] nameArray = appInstance.listAnimationsSorted();
+        int lastIndex = nameArray.length - 1;
+        int arrIndex = Arrays.binarySearch(nameArray, animationName);
+
+        if (arrIndex < 0) {
+            animationName = nameArray[0];
+        } else if (arrIndex >= lastIndex) {
+            animationName = nameArray[0];
+        } else {
+            animationName = nameArray[arrIndex + 1];
+        }
+
+        appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Select and play the previous animation.
+     */
+    private void previousAnimation() {
+        String[] nameArray = appInstance.listAnimationsSorted();
+        int lastIndex = nameArray.length - 1;
+        int arrIndex = Arrays.binarySearch(nameArray, animationName);
+
+        if (arrIndex < 0) {
+            animationName = nameArray[lastIndex];
+        } else if (arrIndex == 0) {
+            animationName = nameArray[lastIndex];
+        } else {
+            animationName = nameArray[arrIndex - 1];
+        }
+
+        appInstance.setAnim(animationName);
+    }
 
     /**
      * Update the indexed status line.
