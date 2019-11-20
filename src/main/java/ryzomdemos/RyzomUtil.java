@@ -328,10 +328,10 @@ class RyzomUtil {
     }
 
     /**
-     * Enumerate all animation names for the specified skeletal group and
-     * gender.
+     * Enumerate all animation names for an animation asset.
      *
-     * @param fileName
+     * @param fileName the filename of the asset (ending in ".j3o")
+     * @param assetManager (not null)
      * @return a new vector of names in lexicographic order
      */
     private static String[] listAnimations(String fileName,
@@ -390,6 +390,12 @@ class RyzomUtil {
         }
     }
 
+    /**
+     * Print a status message to System.out while preloading assets.
+     *
+     * @param progressCount the number of files processed (&ge;0)
+     * @param numFiles the number of files to be processed (&gt;0)
+     */
     private static void printStatus(int progressCount, int numFiles) {
         float percentage = (100f * progressCount) / numFiles;
         String msg = String.format("%d of %d files analyzed (%.0f%%)",
