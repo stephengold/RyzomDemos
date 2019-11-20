@@ -28,7 +28,6 @@ package ryzomdemos;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
-import com.jme3.animation.Animation;
 import com.jme3.animation.SkeletonControl;
 import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
@@ -49,8 +48,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.system.AppSettings;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,54 +117,6 @@ public class BuildCharacter extends ActionApplication {
     // new methods exposed
 
     /**
-     * Test whether the named animation exists in the loaded model.
-     *
-     * @param name the animation name
-     * @return true if found, otherwise false
-     */
-    boolean animationExists(String name) {
-        AnimControl animControl = characterNode.getControl(AnimControl.class);
-        Animation animation = animControl.getAnim(name);
-        if (animation == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Count how many animations there are for the loaded character.
-     *
-     * @return the count (&ge;0)
-     */
-    int countAnimations() {
-        AnimControl animControl = characterNode.getControl(AnimControl.class);
-        Collection<String> names = animControl.getAnimationNames();
-        int result = names.size();
-
-        return result;
-    }
-
-    /**
-     * Enumerate all animations for the loaded character, in lexicographic
-     * order.
-     *
-     * @return a new array of names (not null, not empty)
-     */
-    String[] listAnimationsSorted() {
-        AnimControl animControl = characterNode.getControl(AnimControl.class);
-        Collection<String> names = animControl.getAnimationNames();
-        int numNames = names.size();
-        assert numNames > 0 : numNames;
-
-        String[] result = new String[numNames];
-        names.toArray(result);
-        Arrays.sort(result);
-
-        return result;
-    }
-
-    /**
      * Main entry point for the BuildCharacter application.
      *
      * @param ignored array of command-line arguments (not null)
@@ -213,6 +162,7 @@ public class BuildCharacter extends ActionApplication {
          * Update the selected Animation and play it.
          */
         AnimControl animControl = characterNode.getControl(AnimControl.class);
+        characterGui.updateAnimationKeyword();
         String animationName = characterGui.updateAnimationName();
         animChannel = animControl.createChannel();
         animChannel.setAnim(animationName);

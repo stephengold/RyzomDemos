@@ -34,7 +34,9 @@ import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +49,7 @@ import jme3utilities.math.MyMath;
 /**
  * AppState to display character parameters in the upper-left of the display.
  * <p>
- * The GUI consists of 10 status lines, one of which is selected for editing.
+ * The GUI consists of 11 status lines, one of which is selected for editing.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -58,19 +60,23 @@ public class CharacterGui extends SimpleAppState {
     /**
      * index of the status line for the name of the animation that's playing
      */
-    final private static int animationStatusLine = 0;
+    final private static int animationStatusLine = 2;
     /**
      * index of the status line for the first body part
      */
-    final private static int firstPartStatusLine = 3;
+    final private static int firstPartStatusLine = 4;
     /**
      * index of the status line for gender
      */
-    final private static int genderStatusLine = 1;
+    final private static int genderStatusLine = 3;
     /**
      * index of the status line for the skeletal group
      */
-    final private static int groupStatusLine = 2;
+    final private static int groupStatusLine = 0;
+    /**
+     * index of the status line for the animation keyword
+     */
+    final private static int keywordStatusLine = 1;
     /**
      * number of lines of text in the GUI status
      */
@@ -107,6 +113,10 @@ public class CharacterGui extends SimpleAppState {
      */
     final private static Map<String, String[]> knownKeywords
             = new TreeMap<>();
+    /**
+     * selected animation keyword
+     */
+    private String animationKeyword;
     /**
      * name of the Animation to play
      */
@@ -181,17 +191,21 @@ public class CharacterGui extends SimpleAppState {
                 break;
             case genderStatusLine:
                 character.toggleGender();
+                appInstance.updateCharacter();
                 break;
             case groupStatusLine:
                 character.toggleGroup();
+                appInstance.updateCharacter();
+                break;
+            case keywordStatusLine:
+                nextKeyword();
                 break;
             default:
                 int ordinal = selectedLine - firstPartStatusLine;
                 BodyPart part = BodyPart.values()[ordinal];
                 character.nextAssetFor(part);
+                appInstance.updateCharacter();
         }
-
-        appInstance.updateCharacter();
     }
 
     /**
@@ -204,17 +218,21 @@ public class CharacterGui extends SimpleAppState {
                 break;
             case genderStatusLine:
                 character.toggleGender();
+                appInstance.updateCharacter();
                 break;
             case groupStatusLine:
                 character.toggleGroup();
+                appInstance.updateCharacter();
+                break;
+            case keywordStatusLine:
+                previousKeyword();
                 break;
             default:
                 int ordinal = selectedLine - firstPartStatusLine;
                 BodyPart part = BodyPart.values()[ordinal];
                 character.previousAssetFor(part);
+                appInstance.updateCharacter();
         }
-
-        appInstance.updateCharacter();
     }
 
     /**
@@ -229,18 +247,30 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
-     * Update the selected animation, to ensure it's playable.
+     * Update the selected keyword to ensure it exists for the selected group
+     * and gender.
+     */
+    void updateAnimationKeyword() {
+        String[] keywordArray = knownKeywords();
+        if (Arrays.binarySearch(keywordArray, animationKeyword) < 0) {
+            animationKeyword = keywordArray[0];
+        }
+    }
+
+    /**
+     * Update the selected animation to ensure it exists for the selected group
+     * and gender and also matches the selected keyword, if any.
      *
-     * @return the updated name
+     * @return the updated name (not null)
      */
     String updateAnimationName() {
-        if (!appInstance.animationExists(animationName)) {
+        List<String> nameList = knownAnimations();
+        if (Collections.binarySearch(nameList, animationName) < 0) {
             String adjName = character.adjustForGender(animationName);
-            if (appInstance.animationExists(adjName)) {
+            if (Collections.binarySearch(nameList, adjName) >= 0) {
                 animationName = adjName;
             } else {
-                String[] nameArray = appInstance.listAnimationsSorted();
-                animationName = nameArray[0];
+                animationName = nameList.get(0);
             }
         }
 
@@ -291,6 +321,7 @@ public class CharacterGui extends SimpleAppState {
         character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand");
         character.setGeometry(BodyPart.Legs, "fy_hom_armor01_pantabottes");
 
+        animationKeyword = "course";
         animationName = "ca_hom_co_course";
         /*
          * Add the status lines to the guiNode.
@@ -315,9 +346,10 @@ public class CharacterGui extends SimpleAppState {
     public void update(float tpf) {
         super.update(tpf);
 
-        int numAnimations = appInstance.countAnimations();
+        List<String> nameList = knownAnimations();
+        int count = nameList.size();
         String text = String.format("Animation(%d): %s",
-                numAnimations, animationName);
+                count, animationName);
         updateStatusLine(animationStatusLine, text);
 
         String genderName = character.isFemale() ? "female" : "male";
@@ -328,15 +360,22 @@ public class CharacterGui extends SimpleAppState {
         text = String.format("SkeletalGroup(2): %s", group);
         updateStatusLine(groupStatusLine, text);
 
-        String gender = character.genderCode();
+        String[] keywordArray = knownKeywords();
+        int numKeywords = keywordArray.length;
+        text = String.format("AnimationKeyword(%d): %s",
+                numKeywords, animationKeyword);
+        updateStatusLine(keywordStatusLine, text);
+
+        String genderCode = character.genderCode();
         for (BodyPart part : BodyPart.values()) {
+            List<String> known = Character.knownGeometries(part, genderCode);
             String assetName = character.geometryName(part);
             if (assetName == null) {
-                assetName = "(none)";
+                text = String.format("%s: <none>", part);
+            } else {
+                count = known.size();
+                text = String.format("%s(%d): %s", part, count, assetName);
             }
-            List<String> known = Character.knownGeometries(part, gender);
-            int numKnown = known.size();
-            text = String.format("%s(%d): %s", part, numKnown, assetName);
             updateStatusLine(firstPartStatusLine + part.ordinal(), text);
         }
     }
@@ -344,21 +383,108 @@ public class CharacterGui extends SimpleAppState {
     // private methods
 
     /**
+     * Enumerate all known animations for the selected gender, skeletal group,
+     * and animation keyword.
+     *
+     * @return a new sorted List of animation names (not null, may be empty)
+     */
+    private List<String> knownAnimations() {
+        String groupName = character.groupName();
+        String genderCode = character.genderCode();
+        String[] allNames = Character.knownAnimations(groupName, genderCode);
+
+        String substring;
+        if (animationKeyword == null) {
+            substring = "";
+        } else {
+            substring = "_" + animationKeyword;
+        }
+
+        int count = 0;
+        for (String name : allNames) {
+            if (name.contains(substring)) {
+                ++count;
+            }
+        }
+
+        List<String> result = new ArrayList<>(count);
+        for (String name : allNames) {
+            if (name.contains(substring)) {
+                result.add(name);
+            }
+        }
+
+        assert result != null;
+        assert SortUtil.isSorted(result);
+        return result;
+    }
+
+    /**
+     * Access the array of known keywords for the selected gender and skeletal
+     * group.
+     *
+     * @return the pre-existing array of animation keywords (not null)
+     */
+    private String[] knownKeywords() {
+        String groupName = character.groupName();
+        String genderCode = character.genderCode();
+        String[] result = knownKeywords(groupName, genderCode);
+
+        return result;
+    }
+
+    /**
+     * Access the array of known keywords for the specified gender and skeletal
+     * group.
+     *
+     * @param groupName "ca" or "ge"
+     * @param genderCode "f" for female or "m" for male
+     * @return the pre-existing array of animation keywords (not null)
+     */
+    private static String[] knownKeywords(String groupName, String genderCode) {
+        String mapKey = groupName + genderCode;
+        String[] result = knownKeywords.get(mapKey);
+
+        assert result != null;
+        return result;
+    }
+
+    /**
      * Select and play the next animation.
      */
     private void nextAnimation() {
-        String[] nameArray = appInstance.listAnimationsSorted();
-        int lastIndex = nameArray.length - 1;
-        int arrIndex = Arrays.binarySearch(nameArray, animationName);
+        List<String> names = knownAnimations();
+        int lastIndex = names.size() - 1;
+        int arrayIndex = Collections.binarySearch(names, animationName);
 
-        if (arrIndex < 0) {
-            animationName = nameArray[0];
-        } else if (arrIndex >= lastIndex) {
-            animationName = nameArray[0];
+        if (arrayIndex < 0) {
+            animationName = names.get(0);
+        } else if (arrayIndex >= lastIndex) {
+            animationName = names.get(0);
         } else {
-            animationName = nameArray[arrIndex + 1];
+            animationName = names.get(arrayIndex + 1);
         }
 
+        appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Select the next animation keyword and update the animation accordingly.
+     */
+    private void nextKeyword() {
+        String[] keywordArray = knownKeywords();
+        int lastIndex = keywordArray.length - 1;
+        int arrIndex = Arrays.binarySearch(keywordArray, animationKeyword);
+
+        if (arrIndex < 0) {
+            animationKeyword = keywordArray[0];
+        } else if (arrIndex >= lastIndex) {
+            animationKeyword = keywordArray[0];
+        } else {
+            animationKeyword = keywordArray[arrIndex + 1];
+        }
+
+        updateAnimationName();
         appInstance.setAnim(animationName);
     }
 
@@ -399,18 +525,39 @@ public class CharacterGui extends SimpleAppState {
      * Select and play the previous animation.
      */
     private void previousAnimation() {
-        String[] nameArray = appInstance.listAnimationsSorted();
-        int lastIndex = nameArray.length - 1;
-        int arrIndex = Arrays.binarySearch(nameArray, animationName);
+        List<String> names = knownAnimations();
+        int lastIndex = names.size() - 1;
+        int listIndex = Collections.binarySearch(names, animationName);
 
-        if (arrIndex < 0) {
-            animationName = nameArray[lastIndex];
-        } else if (arrIndex == 0) {
-            animationName = nameArray[lastIndex];
+        if (listIndex < 0) {
+            animationName = names.get(lastIndex);
+        } else if (listIndex == 0) {
+            animationName = names.get(lastIndex);
         } else {
-            animationName = nameArray[arrIndex - 1];
+            animationName = names.get(listIndex - 1);
         }
 
+        appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Select the previous animation keyword and update the animation
+     * accordingly.
+     */
+    private void previousKeyword() {
+        String[] keywordArray = knownKeywords();
+        int lastIndex = keywordArray.length - 1;
+        int arrayIndex = Arrays.binarySearch(keywordArray, animationKeyword);
+
+        if (arrayIndex < 0) {
+            animationKeyword = keywordArray[0];
+        } else if (arrayIndex == 0) {
+            animationKeyword = keywordArray[lastIndex];
+        } else {
+            animationKeyword = keywordArray[arrayIndex - 1];
+        }
+
+        updateAnimationName();
         appInstance.setAnim(animationName);
     }
 
