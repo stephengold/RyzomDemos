@@ -38,9 +38,9 @@ repositories {
 
 dependencies {
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
+    implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
-    
+
     // 3 libraries included solely to avoid AssetConfig warnings:
     runtimeOnly 'org.jmonkeyengine:jme3-blender:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
