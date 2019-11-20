@@ -272,8 +272,20 @@ class Character {
     }
 
     /**
-     * Alter the geometry asset for the specified body part. TODO re-order
-     * methods
+     * Alter the character's gender.
+     *
+     * @param code "f" for female or "m" for male
+     * @return this instance for chaining
+     */
+    Character setGender(String code) {
+        assert code.equals("m") || code.equals("f") : code;
+        gender = code;
+
+        return this;
+    }
+
+    /**
+     * Alter the geometry asset for the specified body part.
      *
      * @param part (not null)
      * @param assetName (may be null)
@@ -284,19 +296,6 @@ class Character {
             assert RyzomUtil.assetExists(assetName);
         }
         assets.put(part, assetName);
-
-        return this;
-    }
-
-    /**
-     * Alter the character's gender.
-     *
-     * @param code "f" for female or "m" for male
-     * @return this instance for chaining
-     */
-    Character setGender(String code) {
-        assert code.equals("m") || code.equals("f") : code;
-        gender = code;
 
         return this;
     }
