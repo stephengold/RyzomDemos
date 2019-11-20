@@ -165,7 +165,7 @@ public class BuildCharacter extends ActionApplication {
         characterGui.updateAnimationKeyword();
         String animationName = characterGui.updateAnimationName();
         animChannel = animControl.createChannel();
-        animChannel.setAnim(animationName);
+        setAnim(animationName);
         /*
          * Add a visualizer for the model's skeleton.
          */

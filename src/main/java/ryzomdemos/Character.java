@@ -296,8 +296,7 @@ class Character {
             map = knownFemaleAssets;
         }
 
-        List<String> result;
-        result = map.get(part);
+        List<String> result = map.get(part);
         if (result == null) { // lazy allocation of lists
             result = new ArrayList<>(initialCapacity);
             map.put(part, result);
@@ -352,8 +351,8 @@ class Character {
         if (selected == null) {
             next = known.get(0);
         } else {
-            int index = known.indexOf(selected);
-            if (index == -1) {
+            int index = Collections.binarySearch(known, selected);
+            if (index < 0) {
                 next = known.get(0);
             } else if (index == numKnown - 1) {
                 next = null;
