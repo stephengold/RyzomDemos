@@ -302,6 +302,7 @@ class Character {
             map.put(part, result);
         }
 
+        assert SortUtil.isSorted(result);
         assert result != null;
         return result;
     }
