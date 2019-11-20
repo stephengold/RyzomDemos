@@ -53,6 +53,10 @@ class Character {
      */
     final private static int initialCapacity = 120; // TODO Set -> List
     /**
+     * status interval (in nanoseconds)
+     */
+    final private static int statusInterval = 1_000_000_000;
+    /**
      * message logger for this class
      */
     final public static Logger logger
@@ -339,6 +343,7 @@ class Character {
         int numFiles = fileNames.length;
 
         int progressCount = 0;
+        long nextStatus = System.nanoTime();
         for (String fileName : fileNames) {
             if (fileName.matches("^(ca|fy|ge|ma|tr|zo).*$")) {
                 // geometries asset
@@ -350,13 +355,12 @@ class Character {
             }
 
             ++progressCount;
-            if ((progressCount % 25) == 0) {
-                float percentage = (100f * progressCount) / numFiles;
-                String msg = String.format("%d of %d files analyzed (%.0f%%)",
-                        progressCount, numFiles, percentage);
-                System.out.printf("%s%n", msg);
+            if (System.nanoTime() >= nextStatus) {
+                printStatus(progressCount, numFiles);
+                nextStatus = System.nanoTime() + statusInterval;
             }
         }
+        printStatus(progressCount, numFiles);
 
         for (BodyPart part : BodyPart.values()) {
             List<String> fList = knownFemaleAssets.get(part);
@@ -547,5 +551,13 @@ class Character {
         }
 
         return result;
+    }
+
+    private static void printStatus(int progressCount, int numFiles) {
+        float percentage = (100f * progressCount) / numFiles;
+        String msg = String.format("%d of %d files analyzed (%.0f%%)",
+                progressCount, numFiles, percentage);
+        System.out.println(msg);
+        System.out.flush();
     }
 }
