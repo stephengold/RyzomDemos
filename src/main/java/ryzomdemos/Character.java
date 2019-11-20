@@ -495,7 +495,7 @@ class Character {
                 result = BodyPart.Feet;
                 break;
             case "ARMOR_CHEST":
-                result = BodyPart.Chest;
+                result = BodyPart.Torso;
                 break;
             case "ARMOR_HANDS":
             case "GAUNTLET":

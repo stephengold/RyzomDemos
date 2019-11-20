@@ -273,7 +273,7 @@ public class CharacterGui extends SimpleAppState {
         character.setGender("m");
         character.setGroup("ca");
         character.setGeometry(BodyPart.Arms, "fy_hom_armor01_armpad");
-        character.setGeometry(BodyPart.Chest, "fy_hom_armor01_gilet");
+        character.setGeometry(BodyPart.Torso, "fy_hom_armor01_gilet");
         character.setGeometry(BodyPart.Face, "fy_hom_visage");
         character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes");
         character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01");

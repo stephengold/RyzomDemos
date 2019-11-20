@@ -34,7 +34,7 @@ package ryzomdemos;
 enum BodyPart {
     Face,
     Head,
-    Chest,
+    Torso,
     Arms,
     Hands,
     Legs,
