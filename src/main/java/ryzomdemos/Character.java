@@ -74,6 +74,14 @@ class Character {
      * filesystem path to the asset root
      */
     final static String assetRoot = "../RyzomConverter/assets";
+    /**
+     * all gender codes
+     */
+    final static String[] genderCodeArray = {"f", "m"};
+    /**
+     * all skeletal-group names
+     */
+    final static String[] groupNameArray = {"ca", "ge"};
     // *************************************************************************
     // fields
 
