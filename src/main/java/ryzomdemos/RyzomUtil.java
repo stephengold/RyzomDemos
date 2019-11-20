@@ -38,7 +38,9 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import jme3utilities.math.noise.Generator;
 
@@ -105,6 +107,12 @@ class RyzomUtil {
      * sorted lexicographically
      */
     final private static Map<String, String[]> knownAnimations
+            = new TreeMap<>();
+    /**
+     * all known animation keywords: key = groupName + genderCode, each array
+     * sorted lexicographically
+     */
+    final private static Map<String, String[]> knownKeywords
             = new TreeMap<>();
     // *************************************************************************
     // new methods exposed
@@ -174,6 +182,23 @@ class RyzomUtil {
     }
 
     /**
+     * Access the sorted array of known keywords for the specified gender and
+     * skeletal group.
+     *
+     * @param groupName "ca" or "ge"
+     * @param genderCode "f" for female or "m" for male
+     * @return the pre-existing array of animation keywords (not null, in
+     * lexicographic order)
+     */
+    static String[] knownKeywords(String groupName, String genderCode) {
+        String mapKey = groupName + genderCode;
+        String[] result = knownKeywords.get(mapKey);
+
+        assert result != null;
+        return result;
+    }
+
+    /**
      * Preload all assets in the specified directory. Assign each geometries
      * asset to a list based on its body part and gender. Also build lists of
      * animation names for each skeletal group and gender. TODO rename
@@ -223,6 +248,8 @@ class RyzomUtil {
             List<String> mList = knownMaleAssets.get(part);
             Collections.sort(mList);
         }
+
+        populateKeywords();
     }
     // *************************************************************************
     // private methods
@@ -330,6 +357,38 @@ class RyzomUtil {
         assert SortUtil.isSorted(result);
         assert result != null;
         return result;
+    }
+
+    /**
+     * Populate the arrays of known animation keywords.
+     */
+    private static void populateKeywords() {
+        for (String groupName : groupNameArray) {
+            for (String genderCode : genderCodeArray) {
+                Set<String> keywordSet = new TreeSet<>();
+                String[] nameArray = knownAnimations(groupName, genderCode);
+                for (String name : nameArray) {
+                    String[] words = name.split("_");
+                    for (String word : words) {
+                        // trim trailing digits
+                        while (word.matches("^.+[0-9]$")) {
+                            word = word.substring(0, word.length() - 1);
+                        }
+
+                        if (word.length() >= 3) {
+                            keywordSet.add(word);
+                        }
+                    }
+                }
+                int numKeywords = keywordSet.size();
+                String[] keywords = new String[numKeywords];
+                keywordSet.toArray(keywords);
+                assert SortUtil.isSorted(keywords);
+
+                String key = groupName + genderCode;
+                knownKeywords.put(key, keywords);
+            }
+        }
     }
 
     private static void printStatus(int progressCount, int numFiles) {

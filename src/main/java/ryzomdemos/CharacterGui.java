@@ -38,10 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 import jme3utilities.SimpleAppState;
 import jme3utilities.math.MyMath;
@@ -107,12 +103,6 @@ public class CharacterGui extends SimpleAppState {
      * index of the status line selected for editing
      */
     private int selectedLine = 0;
-    /**
-     * all known animation keywords: key = groupName + genderCode, each array
-     * sorted lexicographically
-     */
-    final private static Map<String, String[]> knownKeywords
-            = new TreeMap<>();
     /**
      * selected animation keyword
      */
@@ -309,7 +299,6 @@ public class CharacterGui extends SimpleAppState {
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
         RyzomUtil.preloadGeometries(assetManager);
-        populateKeywords();
 
         character.setGender("m");
         character.setGroup("ca");
@@ -436,24 +425,8 @@ public class CharacterGui extends SimpleAppState {
     private String[] knownKeywords() {
         String groupName = character.groupName();
         String genderCode = character.genderCode();
-        String[] result = knownKeywords(groupName, genderCode);
+        String[] result = RyzomUtil.knownKeywords(groupName, genderCode);
 
-        return result;
-    }
-
-    /**
-     * Access the array of known keywords for the specified gender and skeletal
-     * group.
-     *
-     * @param groupName "ca" or "ge"
-     * @param genderCode "f" for female or "m" for male
-     * @return the pre-existing array of animation keywords (not null)
-     */
-    private static String[] knownKeywords(String groupName, String genderCode) {
-        String mapKey = groupName + genderCode;
-        String[] result = knownKeywords.get(mapKey);
-
-        assert result != null;
         return result;
     }
 
@@ -494,39 +467,6 @@ public class CharacterGui extends SimpleAppState {
 
         updateAnimationName();
         appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Populate the arrays of known animation keywords.
-     */
-    private void populateKeywords() {
-        for (String groupName : RyzomUtil.groupNameArray) {
-            for (String genderCode : RyzomUtil.genderCodeArray) {
-                Set<String> keywordSet = new TreeSet<>();
-                String[] nameArray
-                        = RyzomUtil.knownAnimations(groupName, genderCode);
-                for (String name : nameArray) {
-                    String[] words = name.split("_");
-                    for (String word : words) {
-                        // trim trailing digits
-                        while (word.matches("^.+[0-9]$")) {
-                            word = word.substring(0, word.length() - 1);
-                        }
-
-                        if (word.length() >= 3) {
-                            keywordSet.add(word);
-                        }
-                    }
-                }
-                int numKeywords = keywordSet.size();
-                String[] keywords = new String[numKeywords];
-                keywordSet.toArray(keywords);
-                assert SortUtil.isSorted(keywords);
-
-                String key = groupName + genderCode;
-                knownKeywords.put(key, keywords);
-            }
-        }
     }
 
     /**
