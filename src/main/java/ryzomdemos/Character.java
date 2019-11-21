@@ -272,6 +272,22 @@ class Character {
     }
 
     /**
+     * Pseudo-randomly alter the character's gender.
+     */
+    void randomizeGender() {
+        Object picked = RyzomUtil.generator.pick(RyzomUtil.genderCodeArray);
+        setGender((String) picked);
+    }
+
+    /**
+     * Pseudo-randomly alter the character's skeletal group.
+     */
+    void randomizeGroup() {
+        Object picked = RyzomUtil.generator.pick(RyzomUtil.groupNameArray);
+        setGroup((String) picked);
+    }
+
+    /**
      * Alter the character's gender.
      *
      * @param code "f" for female or "m" for male
