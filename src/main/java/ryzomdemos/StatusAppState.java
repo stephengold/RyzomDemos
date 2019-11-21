@@ -34,19 +34,16 @@ import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import jme3utilities.SimpleAppState;
-import jme3utilities.math.MyMath;
 
 /**
- * AppState to display character parameters in the upper-left of the display.
- * <p>
- * The overlay consists of 11 status lines, one of which is selected for
- * editing.
+ * AppState to display the Status of the BuildCharacter application in an
+ * overlay. The overlay consists of 11 status lines, one of which is selected
+ * for editing. The overlay is located in the upper-left portion of the display.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -57,27 +54,27 @@ public class StatusAppState extends SimpleAppState {
     /**
      * index of the status line for the name of the animation that's playing
      */
-    final private static int animationStatusLine = 2;
+    final static int animationStatusLine = 2;
     /**
      * index of the status line for the first body part
      */
-    final private static int firstPartStatusLine = 4;
+    final static int firstPartStatusLine = 4;
     /**
      * index of the status line for gender
      */
-    final private static int genderStatusLine = 3;
+    final static int genderStatusLine = 3;
     /**
      * index of the status line for the skeletal group
      */
-    final private static int groupStatusLine = 0;
+    final static int groupStatusLine = 0;
     /**
      * index of the status line for the animation keyword
      */
-    final private static int keywordStatusLine = 1;
+    final static int keywordStatusLine = 1;
     /**
      * number of lines of text in the overlay
      */
-    final private static int numStatusLines
+    final static int numStatusLines
             = firstPartStatusLine + BodyPart.values().length;
     /**
      * message logger for this class
@@ -97,21 +94,13 @@ public class StatusAppState extends SimpleAppState {
      */
     private BuildCharacter appInstance;
     /**
-     * configured Character, including its gender and geometry assets
+     * actual application state, or null for unknown
      */
-    final private Character character = new Character();
+    private Status actual = null;
     /**
-     * index of the status line selected for editing
+     * configured application state, to be actualized during the next update()
      */
-    private int selectedLine = 0;
-    /**
-     * selected animation keyword
-     */
-    private String animationKeyword;
-    /**
-     * name of the Animation to play
-     */
-    private String animationName = null;
+    final private Status config = new Status();
     // *************************************************************************
     // constructors
 
@@ -125,20 +114,12 @@ public class StatusAppState extends SimpleAppState {
     // new methods exposed
 
     /**
-     * Advance the status-line selection by the specified amount.
+     * Attach all configured body parts to the specified Node.
      *
-     * @param numLines the number of lines to move downward
-     */
-    void advanceSelectedLine(int numLines) {
-        selectedLine = MyMath.modulo(selectedLine + numLines, numStatusLines);
-    }
-
-    /**
-     * Attach all the selected body parts to the specified Node.
-     *
-     * @param parentNode (not null)
+     * @param parentNode where to attach (not null)
      */
     void attachBodyParts(Node parentNode) {
+        Character character = config.getCharacter();
         character.adjustAssetsForGender();
         /*
          * Load the selected body-part geometries and attach them to the parent.
@@ -158,13 +139,14 @@ public class StatusAppState extends SimpleAppState {
     }
 
     /**
-     * Load a character node (including a SkeletonControl and an AnimControl but
-     * no geometries) and attach it to the specified Node.
+     * Load the configured character node (including a SkeletonControl and an
+     * AnimControl but no geometries) and attach it to the specified Node.
      *
-     * @param parentNode (not null)
+     * @param parentNode where to attach (not null)
      * @return the new Node
      */
     Node attachCharacterNode(Node parentNode) {
+        Character character = config.getCharacter();
         ModelKey assetKey = character.makeAnimationAssetKey();
         Node result = (Node) assetManager.loadAsset(assetKey);
         parentNode.attachChild(result);
@@ -173,126 +155,12 @@ public class StatusAppState extends SimpleAppState {
     }
 
     /**
-     * Select the next value for the selected status line.
-     */
-    void nextValue() {
-        switch (selectedLine) {
-            case animationStatusLine:
-                nextAnimation();
-                break;
-            case genderStatusLine:
-                character.toggleGender();
-                appInstance.updateCharacter();
-                break;
-            case groupStatusLine:
-                character.toggleGroup();
-                appInstance.updateCharacter();
-                break;
-            case keywordStatusLine:
-                nextKeyword();
-                break;
-            default:
-                int ordinal = selectedLine - firstPartStatusLine;
-                BodyPart part = BodyPart.values()[ordinal];
-                character.nextAssetFor(part);
-                appInstance.updateCharacter();
-        }
-    }
-
-    /**
-     * Select the previous value for the selected status line.
-     */
-    void previousValue() {
-        switch (selectedLine) {
-            case animationStatusLine:
-                previousAnimation();
-                break;
-            case genderStatusLine:
-                character.toggleGender();
-                appInstance.updateCharacter();
-                break;
-            case groupStatusLine:
-                character.toggleGroup();
-                appInstance.updateCharacter();
-                break;
-            case keywordStatusLine:
-                previousKeyword();
-                break;
-            default:
-                int ordinal = selectedLine - firstPartStatusLine;
-                BodyPart part = BodyPart.values()[ordinal];
-                character.previousAssetFor(part);
-                appInstance.updateCharacter();
-        }
-    }
-
-    /**
-     * Pseudo-randomly select body-part assets.
-     */
-    void randomizeAllParts() {
-        for (BodyPart part : BodyPart.values()) {
-            character.randomize(part);
-        }
-
-        appInstance.updateCharacter();
-    }
-
-    /**
-     * Select a pseudo-random value for the selected status line.
-     */
-    void randomizeValue() {
-        switch (selectedLine) {
-            case animationStatusLine:
-                randomizeAnimation();
-                break;
-            case genderStatusLine:
-                character.randomizeGender();
-                appInstance.updateCharacter();
-                break;
-            case groupStatusLine:
-                character.randomizeGroup();
-                appInstance.updateCharacter();
-                break;
-            case keywordStatusLine:
-                randomizeKeyword();
-                break;
-            default:
-                int ordinal = selectedLine - firstPartStatusLine;
-                BodyPart part = BodyPart.values()[ordinal];
-                character.randomize(part);
-                appInstance.updateCharacter();
-        }
-    }
-
-    /**
-     * Update the selected keyword to ensure it exists for the selected group
-     * and gender.
-     */
-    void updateAnimationKeyword() {
-        String[] keywordArray = knownKeywords();
-        if (Arrays.binarySearch(keywordArray, animationKeyword) < 0) {
-            animationKeyword = keywordArray[0];
-        }
-    }
-
-    /**
-     * Update the selected animation to ensure it exists for the selected group
-     * and gender and also matches the selected keyword, if any.
+     * Access the configured application state.
      *
-     * @return the updated name (not null)
+     * @return the pre-existing instance (not null)
      */
-    String updateAnimationName() {
-        List<String> nameList = knownAnimations();
-        if (Collections.binarySearch(nameList, animationName) < 0) {
-            String adjName = character.adjustForGender(animationName);
-            if (Collections.binarySearch(nameList, adjName) >= 0) {
-                animationName = adjName;
-            } else {
-                animationName = nameList.get(0);
-            }
-        }
-
-        return animationName;
+    Status getConfig() {
+        return config;
     }
     // *************************************************************************
     // ActionAppState methods
@@ -325,21 +193,7 @@ public class StatusAppState extends SimpleAppState {
         appInstance = (BuildCharacter) app;
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
-
         RyzomUtil.preloadAssets(assetManager);
-
-        character.setGender("m");
-        character.setGroup("ca");
-        character.setGeometry(BodyPart.Arms, "fy_hom_armor01_armpad");
-        character.setGeometry(BodyPart.Torso, "fy_hom_armor01_gilet");
-        character.setGeometry(BodyPart.Face, "fy_hom_visage");
-        character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes");
-        character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01");
-        character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand");
-        character.setGeometry(BodyPart.Legs, "fy_hom_armor01_pantabottes");
-
-        animationKeyword = "course";
-        animationName = "ca_hom_co_course";
         /*
          * Add the status lines to the guiNode.
          */
@@ -363,31 +217,63 @@ public class StatusAppState extends SimpleAppState {
     public void update(float tpf) {
         super.update(tpf);
 
-        List<String> nameList = knownAnimations();
+        if (actual != null && actual.equals(config)) {
+            return; // unchanged
+        }
+
+        updateCharacter();
+        appInstance.updateFeatureVisibility();
+
+        List<String> nameList = config.knownAnimations();
+        String animationName = config.animationName();
         int index = 1 + Collections.binarySearch(nameList, animationName);
         int count = nameList.size();
         String text = String.format("Animation #%d of %d: %s",
                 index, count, animationName);
         updateStatusLine(animationStatusLine, text);
 
+        appInstance.setAnim(animationName);
+
+        String[] keywordArray = config.knownKeywords();
+        String keyword = config.keyword();
+        index = 1 + Arrays.binarySearch(keywordArray, keyword);
+        count = keywordArray.length;
+        text = String.format("Animation Keyword #%d of %d: %s",
+                index, count, keyword);
+        updateStatusLine(keywordStatusLine, text);
+
+        if (actual == null) {
+            actual = new Status();
+        }
+        actual.copy(config);
+    }
+    // *************************************************************************
+    // private methods
+
+    /**
+     * Update everything that depends on the configured character body.
+     */
+    private void updateCharacter() {
+        Character character = config.getCharacter();
+        if (actual != null
+                && actual.getCharacter().equals(character)
+                && actual.selectedField() == config.selectedField()) {
+            return; // unchanged
+        }
+        /*
+         * Update body-dependent status lines.
+         */
         String genderName = character.isFemale() ? "female" : "male";
-        index = character.isFemale() ? 1 : 2;
-        text = String.format("Gender #%d of 2: %s", index, genderName);
+        int index = character.isFemale() ? 1 : 2;
+        String text = String.format("Gender #%d of 2: %s", index, genderName);
         updateStatusLine(genderStatusLine, text);
 
         String group = character.groupName();
         index = 1 + Arrays.binarySearch(RyzomUtil.groupNameArray, group);
-        count = RyzomUtil.groupNameArray.length;
-        text = String.format("SkeletalGroup #%d of %d: %s",
+        int count = RyzomUtil.groupNameArray.length;
+        text = String.format("Skeletal Group #%d of %d: %s",
                 index, count, group);
         updateStatusLine(groupStatusLine, text);
-
-        String[] keywordArray = knownKeywords();
-        index = 1 + Arrays.binarySearch(keywordArray, animationKeyword);
-        count = keywordArray.length;
-        text = String.format("AnimationKeyword #%d of %d: %s",
-                index, count, animationKeyword);
-        updateStatusLine(keywordStatusLine, text);
 
         String genderCode = character.genderCode();
         for (BodyPart part : BodyPart.values()) {
@@ -403,159 +289,10 @@ public class StatusAppState extends SimpleAppState {
             }
             updateStatusLine(firstPartStatusLine + part.ordinal(), text);
         }
-    }
-    // *************************************************************************
-    // private methods
 
-    /**
-     * Enumerate all known animations for the selected gender, skeletal group,
-     * and animation keyword.
-     *
-     * @return a new sorted List of animation names (not null, may be empty)
-     */
-    private List<String> knownAnimations() {
-        String groupName = character.groupName();
-        String genderCode = character.genderCode();
-        String[] allNames = RyzomUtil.knownAnimations(groupName, genderCode);
-
-        String substring;
-        if (animationKeyword == null) {
-            substring = "";
-        } else {
-            substring = "_" + animationKeyword;
+        if (actual == null || !actual.getCharacter().equals(character)) {
+            appInstance.updateCharacter();
         }
-
-        int count = 0;
-        for (String name : allNames) {
-            if (name.contains(substring)) {
-                ++count;
-            }
-        }
-
-        List<String> result = new ArrayList<>(count);
-        for (String name : allNames) {
-            if (name.contains(substring)) {
-                result.add(name);
-            }
-        }
-
-        assert result != null;
-        assert SortUtil.isSorted(result);
-        return result;
-    }
-
-    /**
-     * Access the array of known keywords for the selected gender and skeletal
-     * group.
-     *
-     * @return the pre-existing array of animation keywords (not null)
-     */
-    private String[] knownKeywords() {
-        String groupName = character.groupName();
-        String genderCode = character.genderCode();
-        String[] result = RyzomUtil.knownKeywords(groupName, genderCode);
-
-        return result;
-    }
-
-    /**
-     * Select and play the next animation.
-     */
-    private void nextAnimation() {
-        List<String> names = knownAnimations();
-        int lastIndex = names.size() - 1;
-        int arrayIndex = Collections.binarySearch(names, animationName);
-
-        if (arrayIndex < 0) {
-            animationName = names.get(0);
-        } else if (arrayIndex >= lastIndex) {
-            animationName = names.get(0);
-        } else {
-            animationName = names.get(arrayIndex + 1);
-        }
-
-        appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Select the next animation keyword and update the animation accordingly.
-     */
-    private void nextKeyword() {
-        String[] keywordArray = knownKeywords();
-        int lastIndex = keywordArray.length - 1;
-        int arrIndex = Arrays.binarySearch(keywordArray, animationKeyword);
-
-        if (arrIndex < 0) {
-            animationKeyword = keywordArray[0];
-        } else if (arrIndex >= lastIndex) {
-            animationKeyword = keywordArray[0];
-        } else {
-            animationKeyword = keywordArray[arrIndex + 1];
-        }
-
-        updateAnimationName();
-        appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Select and play the previous animation.
-     */
-    private void previousAnimation() {
-        List<String> names = knownAnimations();
-        int lastIndex = names.size() - 1;
-        int listIndex = Collections.binarySearch(names, animationName);
-
-        if (listIndex < 0) {
-            animationName = names.get(lastIndex);
-        } else if (listIndex == 0) {
-            animationName = names.get(lastIndex);
-        } else {
-            animationName = names.get(listIndex - 1);
-        }
-
-        appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Select the previous animation keyword and update the animation
-     * accordingly.
-     */
-    private void previousKeyword() {
-        String[] keywordArray = knownKeywords();
-        int lastIndex = keywordArray.length - 1;
-        int arrayIndex = Arrays.binarySearch(keywordArray, animationKeyword);
-
-        if (arrayIndex < 0) {
-            animationKeyword = keywordArray[0];
-        } else if (arrayIndex == 0) {
-            animationKeyword = keywordArray[lastIndex];
-        } else {
-            animationKeyword = keywordArray[arrayIndex - 1];
-        }
-
-        updateAnimationName();
-        appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Pseudo-randomly select an Animation for the selected gender, skeletal
-     * group, and animation keyword.
-     */
-    private void randomizeAnimation() {
-        List<String> known = knownAnimations();
-        animationName = (String) RyzomUtil.generator.pick(known);
-        appInstance.setAnim(animationName);
-    }
-
-    /**
-     * Pseudo-randomly select an animation keyword for the selected gender and
-     * skeletal group.
-     */
-    private void randomizeKeyword() {
-        String[] known = knownKeywords();
-        animationKeyword = (String) RyzomUtil.generator.pick(known);
-        updateAnimationName();
-        appInstance.setAnim(animationName);
     }
 
     /**
@@ -563,6 +300,8 @@ public class StatusAppState extends SimpleAppState {
      */
     private void updateStatusLine(int lineIndex, String text) {
         BitmapText spatial = statusLines[lineIndex];
+        int selectedLine = config.selectedField();
+
         if (lineIndex == selectedLine) {
             spatial.setColor(ColorRGBA.Yellow);
             spatial.setText("-> " + text);

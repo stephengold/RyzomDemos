@@ -177,40 +177,53 @@ public class BuildCharacter extends ActionApplication {
      * Add the configured Character to the scene, removing any pre-existing one.
      */
     void updateCharacter() {
-        boolean isEnabled = (characterNode == null) ? true
-                : characterNode.getLocalCullHint() != Spatial.CullHint.Always;
         unloadCharacter();
         attachCharacter();
-        Spatial.CullHint cullHint = isEnabled ? Spatial.CullHint.Never
-                : Spatial.CullHint.Always;
-        characterNode.setCullHint(cullHint);
         /*
          * Update the selected Animation and play it.
          */
         AnimControl animControl = characterNode.getControl(AnimControl.class);
-        statusAppState.updateAnimationKeyword();
-        String animationName = statusAppState.updateAnimationName();
+        String animationName = statusAppState.getConfig().animationName();
         animChannel = animControl.createChannel();
         setAnim(animationName);
         /*
          * Add a visualizer for the model's skeleton.
          */
-        isEnabled = (sv == null) ? false : sv.isEnabled();
         SkeletonControl skeletonControl
                 = characterNode.getControl(SkeletonControl.class);
         sv = new SkeletonVisualizer(assetManager, skeletonControl);
         sv.setLineColor(ColorRGBA.Yellow);
         rootNode.addControl(sv);
-        sv.setEnabled(isEnabled);
         /*
-         * Add a visualizer for the world axes.
+         * Add a visualizer for the world axes. TODO separate method
          */
-        isEnabled = (axes == null) ? false : axes.isEnabled();
         float axisLength = 0.8f;
         axes = new AxesVisualizer(assetManager, axisLength);
         axes.setLineWidth(0f);
         rootNode.addControl(axes);
-        axes.setEnabled(isEnabled);
+    }
+
+    /**
+     * Update the visibility of all features.
+     */
+    void updateFeatureVisibility() {
+        Status config = statusAppState.getConfig();
+
+        boolean showAxes = config.isVisible(Feature.Axes);
+        axes.setEnabled(showAxes);
+
+        boolean showHelp = config.isVisible(Feature.Help);
+        Spatial.CullHint cullHint = showHelp ? Spatial.CullHint.Dynamic
+                : Spatial.CullHint.Always;
+        helpNode.setCullHint(cullHint);
+
+        boolean showMeshes = config.isVisible(Feature.Meshes);
+        cullHint = showMeshes ? Spatial.CullHint.Dynamic
+                : Spatial.CullHint.Always;
+        characterNode.setCullHint(cullHint);
+
+        boolean showSkeleton = config.isVisible(Feature.Skeleton);
+        sv.setEnabled(showSkeleton);
     }
     // *************************************************************************
     // ActionApplication methods
@@ -295,30 +308,31 @@ public class BuildCharacter extends ActionApplication {
     @Override
     public void onAction(String actionString, boolean ongoing, float tpf) {
         if (ongoing) {
+            Status config = statusAppState.getConfig();
             switch (actionString) {
                 case "dump scenes":
                     dumper.dump(renderManager);
                     return;
 
                 case "next statusLine":
-                    statusAppState.advanceSelectedLine(+1);
+                    config.advanceSelectedField(+1);
                     return;
                 case "next value":
-                    statusAppState.nextValue();
+                    config.nextValue();
                     return;
 
                 case "previous statusLine":
-                    statusAppState.advanceSelectedLine(-1);
+                    config.advanceSelectedField(-1);
                     return;
                 case "previous value":
-                    statusAppState.previousValue();
+                    config.previousValue();
                     return;
 
                 case "randomize allParts":
-                    statusAppState.randomizeAllParts();
+                    config.randomizeAllParts();
                     return;
                 case "randomize value":
-                    statusAppState.randomizeValue();
+                    config.randomizeValue();
                     return;
 
                 case "save":
@@ -326,19 +340,19 @@ public class BuildCharacter extends ActionApplication {
                     return;
 
                 case "toggle axes":
-                    toggleAxes();
+                    config.toggleVisibility(Feature.Axes);
                     return;
                 case "toggle help":
-                    toggleHelp();
+                    config.toggleVisibility(Feature.Help);
                     return;
                 case "toggle meshes":
-                    toggleMeshes();
+                    config.toggleVisibility(Feature.Meshes);
                     return;
                 case "toggle pause":
                     togglePause();
                     return;
                 case "toggle skeleton":
-                    toggleSkeleton();
+                    config.toggleVisibility(Feature.Skeleton);
                     return;
             }
         }
@@ -488,52 +502,11 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Toggle visibility of the coordinate axes.
-     */
-    private void toggleAxes() {
-        boolean isEnabled = axes.isEnabled();
-        axes.setEnabled(!isEnabled);
-    }
-
-    /**
-     * Toggle visibility of the help node.
-     */
-    private void toggleHelp() {
-        if (helpNode.getCullHint() == Spatial.CullHint.Always) {
-            helpNode.setCullHint(Spatial.CullHint.Never);
-        } else {
-            helpNode.setCullHint(Spatial.CullHint.Always);
-        }
-    }
-
-    /**
-     * Toggle mesh rendering on/off.
-     */
-    private void toggleMeshes() {
-        Spatial.CullHint hint = characterNode.getLocalCullHint();
-        if (hint == Spatial.CullHint.Inherit
-                || hint == Spatial.CullHint.Never) {
-            hint = Spatial.CullHint.Always;
-        } else if (hint == Spatial.CullHint.Always) {
-            hint = Spatial.CullHint.Never;
-        }
-        characterNode.setCullHint(hint);
-    }
-
-    /**
      * Toggle the Animation: paused/running.
      */
     private void togglePause() {
         float newSpeed = (speed > 1e-12f) ? 1e-12f : 1f;
         setSpeed(newSpeed);
-    }
-
-    /**
-     * Toggle the SkeletonVisualizer on/off.
-     */
-    private void toggleSkeleton() {
-        boolean enabled = sv.isEnabled();
-        sv.setEnabled(!enabled);
     }
 
     /**
