@@ -41,3 +41,8 @@ to pan and/or tilt the camera.
 The screenshot is derived from Ryzom Asset Repository, licensed CC-BY-SA 3.0.
 Alweth is acknowledged for authoring `RyzomConverter`
 and providing it free of charge.
+
+## Statistics
+
+The `Statistics` application calculates statistics
+related to the imported assets and prints a report to `System.out`.
