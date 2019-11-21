@@ -172,7 +172,7 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
-     * Determine the next value for the selected status line.
+     * Select the next value for the selected status line.
      */
     void nextValue() {
         switch (selectedLine) {
@@ -199,7 +199,7 @@ public class CharacterGui extends SimpleAppState {
     }
 
     /**
-     * Determine the previous value for the selected status line.
+     * Select the previous value for the selected status line.
      */
     void previousValue() {
         switch (selectedLine) {
@@ -234,6 +234,33 @@ public class CharacterGui extends SimpleAppState {
         }
 
         appInstance.updateCharacter();
+    }
+
+    /**
+     * Select a pseudo-random value for the selected status line.
+     */
+    void randomizeValue() {
+        switch (selectedLine) {
+            case animationStatusLine:
+                randomizeAnimation();
+                break;
+            case genderStatusLine:
+                character.randomizeGender();
+                appInstance.updateCharacter();
+                break;
+            case groupStatusLine:
+                character.randomizeGroup();
+                appInstance.updateCharacter();
+                break;
+            case keywordStatusLine:
+                randomizeKeyword();
+                break;
+            default:
+                int ordinal = selectedLine - firstPartStatusLine;
+                BodyPart part = BodyPart.values()[ordinal];
+                character.randomize(part);
+                appInstance.updateCharacter();
+        }
     }
 
     /**
@@ -505,6 +532,27 @@ public class CharacterGui extends SimpleAppState {
             animationKeyword = keywordArray[arrayIndex - 1];
         }
 
+        updateAnimationName();
+        appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Pseudo-randomly select an Animation for the selected gender, skeletal
+     * group, and animation keyword.
+     */
+    private void randomizeAnimation() {
+        List<String> known = knownAnimations();
+        animationName = (String) RyzomUtil.generator.pick(known);
+        appInstance.setAnim(animationName);
+    }
+
+    /**
+     * Pseudo-randomly select an animation keyword for the selected gender and
+     * skeletal group.
+     */
+    private void randomizeKeyword() {
+        String[] known = knownKeywords();
+        animationKeyword = (String) RyzomUtil.generator.pick(known);
         updateAnimationName();
         appInstance.setAnim(animationName);
     }

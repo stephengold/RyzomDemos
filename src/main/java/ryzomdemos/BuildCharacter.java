@@ -223,6 +223,7 @@ public class BuildCharacter extends ActionApplication {
         dim.bind("previous value", KeyInput.KEY_NUMPAD4);
 
         dim.bind("randomize allParts", KeyInput.KEY_R);
+        dim.bind("randomize value", KeyInput.KEY_NUMPAD5);
 
         dim.bind("signal orbitLeft", KeyInput.KEY_A);
         dim.bind("signal orbitRight", KeyInput.KEY_D);
@@ -268,6 +269,9 @@ public class BuildCharacter extends ActionApplication {
 
                 case "randomize allParts":
                     characterGui.randomizeAllParts();
+                    return;
+                case "randomize value":
+                    characterGui.randomizeValue();
                     return;
 
                 case "toggle help":
