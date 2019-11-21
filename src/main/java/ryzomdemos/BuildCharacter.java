@@ -366,9 +366,9 @@ public class BuildCharacter extends ActionApplication {
      * Attach a Node to display hotkey help/hints.
      */
     private void addHelp() {
-        float x = 300f;
+        float width = 230f;
         float y = cam.getHeight() - 10f;
-        float width = cam.getWidth() - 310f;
+        float x = cam.getWidth() - width - 10f;
         float height = cam.getHeight() - 20f;
         Rectangle bounds = new Rectangle(x, y, width, height);
 
