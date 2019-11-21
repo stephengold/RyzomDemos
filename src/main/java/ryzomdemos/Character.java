@@ -51,11 +51,10 @@ class Character implements Cloneable {
     // fields
 
     /**
-     * geometry assets used in the character (one asset per body part, may be
-     * null)
+     * geometry assets used in the character (one asset per body part, values
+     * may be null)
      */
-    final private EnumMap<BodyPart, String> assets
-            = new EnumMap<>(BodyPart.class);
+    private EnumMap<BodyPart, String> assets = new EnumMap<>(BodyPart.class);
     /**
      * 1-letter code for the character's gender ("f" for female or "m" for male)
      */
@@ -365,6 +364,8 @@ class Character implements Cloneable {
     @Override
     public Character clone() throws CloneNotSupportedException {
         Character clone = (Character) super.clone();
+        assets = new EnumMap<>(assets);
+
         return clone;
     }
 
