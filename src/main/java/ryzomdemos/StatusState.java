@@ -45,11 +45,12 @@ import jme3utilities.math.MyMath;
 /**
  * AppState to display character parameters in the upper-left of the display.
  * <p>
- * The GUI consists of 11 status lines, one of which is selected for editing.
+ * The overlay consists of 11 status lines, one of which is selected for
+ * editing.
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class CharacterGui extends SimpleAppState {
+public class StatusState extends SimpleAppState {
     // *************************************************************************
     // constants and loggers
 
@@ -74,7 +75,7 @@ public class CharacterGui extends SimpleAppState {
      */
     final private static int keywordStatusLine = 1;
     /**
-     * number of lines of text in the GUI status
+     * number of lines of text in the overlay
      */
     final private static int numStatusLines
             = firstPartStatusLine + BodyPart.values().length;
@@ -82,7 +83,7 @@ public class CharacterGui extends SimpleAppState {
      * message logger for this class
      */
     final public static Logger logger
-            = Logger.getLogger(CharacterGui.class.getName());
+            = Logger.getLogger(StatusState.class.getName());
     // *************************************************************************
     // fields
 
@@ -117,7 +118,7 @@ public class CharacterGui extends SimpleAppState {
     /**
      * Instantiate an uninitialized enabled state.
      */
-    public CharacterGui() {
+    public StatusState() {
         super(true);
     }
     // *************************************************************************
@@ -304,7 +305,7 @@ public class CharacterGui extends SimpleAppState {
     public void cleanup() {
         super.cleanup();
         /*
-         * Remove the status lines from the GUI.
+         * Remove the status lines from the guiNode.
          */
         for (int i = 0; i < numStatusLines; ++i) {
             statusLines[i].removeFromParent();

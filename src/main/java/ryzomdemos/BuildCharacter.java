@@ -111,10 +111,6 @@ public class BuildCharacter extends ActionApplication {
      */
     private AxesVisualizer axes;
     /**
-     * AppState to manage the user-interface overlay
-     */
-    private CharacterGui characterGui;
-    /**
      * dump debugging information to System.out
      */
     final private Dumper dumper = new Dumper();
@@ -134,6 +130,10 @@ public class BuildCharacter extends ActionApplication {
      * visualize the Skeleton of the loaded character model
      */
     private SkeletonVisualizer sv;
+    /**
+     * AppState to manage the status overlay
+     */
+    private StatusState statusState;
     // *************************************************************************
     // new methods exposed
 
@@ -188,8 +188,8 @@ public class BuildCharacter extends ActionApplication {
          * Update the selected Animation and play it.
          */
         AnimControl animControl = characterNode.getControl(AnimControl.class);
-        characterGui.updateAnimationKeyword();
-        String animationName = characterGui.updateAnimationName();
+        statusState.updateAnimationKeyword();
+        String animationName = statusState.updateAnimationName();
         animChannel = animControl.createChannel();
         setAnim(animationName);
         /*
@@ -241,8 +241,8 @@ public class BuildCharacter extends ActionApplication {
 
         Locators.registerFilesystem(RyzomUtil.assetRoot);
 
-        characterGui = new CharacterGui();
-        stateManager.attach(characterGui);
+        statusState = new StatusState();
+        stateManager.attach(statusState);
     }
 
     /**
@@ -254,7 +254,7 @@ public class BuildCharacter extends ActionApplication {
 
         dim.bind("dump scenes", KeyInput.KEY_P);
         /*
-         * CharacterGUI navigation
+         * navigate the status overlay
          */
         dim.bind("next statusLine", KeyInput.KEY_DOWN);
         dim.bind("next statusLine", KeyInput.KEY_NUMPAD2);
@@ -301,24 +301,24 @@ public class BuildCharacter extends ActionApplication {
                     return;
 
                 case "next statusLine":
-                    characterGui.advanceSelectedLine(+1);
+                    statusState.advanceSelectedLine(+1);
                     return;
                 case "next value":
-                    characterGui.nextValue();
+                    statusState.nextValue();
                     return;
 
                 case "previous statusLine":
-                    characterGui.advanceSelectedLine(-1);
+                    statusState.advanceSelectedLine(-1);
                     return;
                 case "previous value":
-                    characterGui.previousValue();
+                    statusState.previousValue();
                     return;
 
                 case "randomize allParts":
-                    characterGui.randomizeAllParts();
+                    statusState.randomizeAllParts();
                     return;
                 case "randomize value":
-                    characterGui.randomizeValue();
+                    statusState.randomizeValue();
                     return;
 
                 case "save":
@@ -406,11 +406,11 @@ public class BuildCharacter extends ActionApplication {
          * (including a SkeletonControl and an AnimControl but no geometries)
          * and attach it to the scene graph.
          */
-        characterNode = characterGui.attachCharacterNode(rootNode);
+        characterNode = statusState.attachCharacterNode(rootNode);
         /*
          * Attach body parts to the character node.
          */
-        characterGui.attachBodyParts(characterNode);
+        statusState.attachBodyParts(characterNode);
         /*
          * Configure the model to cast shadows, but not receive them.
          */
