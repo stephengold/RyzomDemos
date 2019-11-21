@@ -30,9 +30,10 @@ You control `BuildCharacter` using hotkeys:
  + PrtSc : save a screenshot to a file
  + M : show/hide the character's meshes
  + V : show/hide the skeleton overlay
+ + F5 : show/hide the render statistics overlay
+ + semicolon : show/hide the coordinate axes
  + . : pause/resume the animation
  + Esc : quit the application
- + F5 : show/hide the statistics overlay
  + C : dump the camera state to System.out
  + P : dump the scene graphs to System.out
 
