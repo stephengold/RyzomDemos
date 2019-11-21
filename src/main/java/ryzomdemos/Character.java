@@ -111,6 +111,19 @@ class Character implements Cloneable {
     }
 
     /**
+     * Make this instance equivalent to the specified instance.
+     *
+     * @param other (not null)
+     */
+    void copy(Character other) {
+        assets.clear();
+        assets.putAll(other.assets);
+
+        gender = other.genderCode();
+        group = other.groupName();
+    }
+
+    /**
      * Read the character's gender.
      *
      * @return "f" for female or "m" for male
@@ -353,7 +366,7 @@ class Character implements Cloneable {
         }
     }
     // *************************************************************************
-    // Cloneable methods
+    // Object methods
 
     /**
      * Create a copy of this instance.
@@ -384,19 +397,8 @@ class Character implements Cloneable {
         } else if (otherObject instanceof Character) {
             Character other = (Character) otherObject;
             result = other.genderCode().equals(gender)
-                    && other.groupName().equals(group);
-            for (BodyPart part : BodyPart.values()) {
-                if (!result) {
-                    break;
-                }
-                String otherPart = other.geometryName(part);
-                String thisPart = assets.get(part);
-                if (otherPart != null) {
-                    result = otherPart.equals(thisPart);
-                } else if (thisPart != null) {
-                    result = thisPart.equals(otherPart);
-                }
-            }
+                    && other.groupName().equals(group)
+                    && other.assets.equals(assets);
 
         } else {
             result = false;
