@@ -55,6 +55,7 @@ import jme3utilities.Misc;
 import jme3utilities.MyAsset;
 import jme3utilities.MyCamera;
 import jme3utilities.MySpatial;
+import jme3utilities.debug.AxesVisualizer;
 import jme3utilities.debug.Dumper;
 import jme3utilities.debug.SkeletonVisualizer;
 import jme3utilities.ui.ActionApplication;
@@ -89,6 +90,10 @@ public class BuildCharacter extends ActionApplication {
      * channel for playing canned animations
      */
     private AnimChannel animChannel = null;
+    /**
+     * visualize the world axes
+     */
+    private AxesVisualizer axes;
     /**
      * AppState to manage the user-interface overlay
      */
@@ -156,8 +161,13 @@ public class BuildCharacter extends ActionApplication {
      * Add the configured Character to the scene, removing any pre-existing one.
      */
     void updateCharacter() {
+        boolean isEnabled = (characterNode == null) ? true
+                : characterNode.getLocalCullHint() != Spatial.CullHint.Always;
         unloadCharacter();
         attachCharacter();
+        Spatial.CullHint cullHint = isEnabled ? Spatial.CullHint.Never
+                : Spatial.CullHint.Always;
+        characterNode.setCullHint(cullHint);
         /*
          * Update the selected Animation and play it.
          */
@@ -169,11 +179,22 @@ public class BuildCharacter extends ActionApplication {
         /*
          * Add a visualizer for the model's skeleton.
          */
+        isEnabled = (sv == null) ? false : sv.isEnabled();
         SkeletonControl skeletonControl
                 = characterNode.getControl(SkeletonControl.class);
         sv = new SkeletonVisualizer(assetManager, skeletonControl);
         sv.setLineColor(ColorRGBA.Yellow);
         rootNode.addControl(sv);
+        sv.setEnabled(isEnabled);
+        /*
+         * Add a visualizer for the world axes.
+         */
+        isEnabled = (axes == null) ? false : axes.isEnabled();
+        float axisLength = 0.8f;
+        axes = new AxesVisualizer(assetManager, axisLength);
+        axes.setLineWidth(0f);
+        rootNode.addControl(axes);
+        axes.setEnabled(isEnabled);
     }
     // *************************************************************************
     // ActionApplication methods
@@ -228,6 +249,7 @@ public class BuildCharacter extends ActionApplication {
         dim.bind("signal orbitLeft", KeyInput.KEY_A);
         dim.bind("signal orbitRight", KeyInput.KEY_D);
 
+        dim.bind("toggle axes", KeyInput.KEY_SEMICOLON);
         dim.bind("toggle help", KeyInput.KEY_H);
         dim.bind("toggle meshes", KeyInput.KEY_M);
         dim.bind("toggle pause", KeyInput.KEY_PERIOD);
@@ -274,6 +296,9 @@ public class BuildCharacter extends ActionApplication {
                     characterGui.randomizeValue();
                     return;
 
+                case "toggle axes":
+                    toggleAxes();
+                    return;
                 case "toggle help":
                     toggleHelp();
                     return;
@@ -406,6 +431,14 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
+     * Toggle visibility of the coordinate axes.
+     */
+    private void toggleAxes() {
+        boolean isEnabled = axes.isEnabled();
+        axes.setEnabled(!isEnabled);
+    }
+
+    /**
      * Toggle visibility of the help node.
      */
     private void toggleHelp() {
@@ -447,11 +480,13 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * If the scene contains a character model, remove it.
+     * If the scene contains a character model, remove it and its associated
+     * visualizers.
      */
     private void unloadCharacter() {
         if (characterNode != null) {
-            rootNode.detachChild(characterNode);
+            characterNode.removeFromParent();
+            rootNode.removeControl(axes);
             rootNode.removeControl(sv);
             characterNode = null;
         }
