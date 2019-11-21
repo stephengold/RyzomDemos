@@ -31,6 +31,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.SkeletonControl;
 import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
+import com.jme3.app.state.ScreenshotAppState;
 import com.jme3.asset.AssetInfo;
 import com.jme3.asset.TextureKey;
 import com.jme3.export.binary.BinaryExporter;
@@ -219,6 +220,14 @@ public class BuildCharacter extends ActionApplication {
      */
     @Override
     public void actionInitializeApplication() {
+        /*
+         * Capture a screenshot each time KEY_SYSRQ (the PrtSc key) is pressed.
+         */
+        ScreenshotAppState screenShotState
+                = new ScreenshotAppState("Written Assets/", "screenshot");
+        boolean success = stateManager.attach(screenShotState);
+        assert success;
+
         configureCamera();
         configureDumper();
         configureMaterials();

@@ -27,6 +27,7 @@ You control `BuildCharacter` using hotkeys:
  + R : randomize all 7 body-part properties
  + W/A/S/D/Q/Z : dolly forward, orbit left, dolly back, orbit right, rise, fall
  + comma : save the constructed model to files
+ + PrtSc : save a screenshot to a file
  + M : show/hide the character's meshes
  + V : show/hide the skeleton overlay
  + . : pause/resume the animation
