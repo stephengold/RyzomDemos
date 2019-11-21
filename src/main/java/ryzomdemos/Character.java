@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Describe a character that's constructed out of assets imported from the Ryzom
- * Asset Repository by Alweth's RyzomConverter. TODO make Cloneable and Savable
+ * Describe a character body that's constructed out of assets imported from the
+ * Ryzom Asset Repository by Alweth's RyzomConverter. TODO make Savable
  *
  * @author Stephen Gold sgold@sonic.net
  */
-class Character {
+class Character implements Cloneable {
     // *************************************************************************
     // constants and loggers
 
@@ -51,7 +51,8 @@ class Character {
     // fields
 
     /**
-     * geometry assets used in the character (one asset per body part)
+     * geometry assets used in the character (one asset per body part, may be
+     * null)
      */
     final private EnumMap<BodyPart, String> assets
             = new EnumMap<>(BodyPart.class);
@@ -351,5 +352,55 @@ class Character {
             assert group.equals("ge");
             setGroup("ca");
         }
+    }
+    // *************************************************************************
+    // Cloneable methods
+
+    /**
+     * Create a copy of this instance.
+     *
+     * @return a new instance, equivalent to this one
+     * @throws CloneNotSupportedException if the superclass isn't cloneable
+     */
+    @Override
+    public Character clone() throws CloneNotSupportedException {
+        Character clone = (Character) super.clone();
+        return clone;
+    }
+
+    /**
+     * Test for equivalency with another instance.
+     *
+     * @param otherObject (may be null, unaffected)
+     * @return true if the references are equivalent, otherwise false
+     */
+    @Override
+    public boolean equals(Object otherObject) {
+        boolean result;
+        if (this == otherObject) {
+            result = true;
+
+        } else if (otherObject instanceof Character) {
+            Character other = (Character) otherObject;
+            result = other.genderCode().equals(gender)
+                    && other.groupName().equals(group);
+            for (BodyPart part : BodyPart.values()) {
+                if (!result) {
+                    break;
+                }
+                String otherPart = other.geometryName(part);
+                String thisPart = assets.get(part);
+                if (otherPart != null) {
+                    result = otherPart.equals(thisPart);
+                } else if (thisPart != null) {
+                    result = thisPart.equals(otherPart);
+                }
+            }
+
+        } else {
+            result = false;
+        }
+
+        return result;
     }
 }
