@@ -136,7 +136,8 @@ class RyzomUtil {
 
     /**
      * Access the sorted array of known animation names for the specified gender
-     * and skeletal group.
+     * and skeletal group. The assets must have been previously loaded by
+     * {@link #preloadAssets(com.jme3.asset.AssetManager)}.
      *
      * @param groupName "ca" or "ge"
      * @param genderCode "f" for female or "m" for male
@@ -153,7 +154,8 @@ class RyzomUtil {
 
     /**
      * Access the sorted list of known geometry assets for the specified body
-     * part and gender. TODO return an array
+     * part and gender. The assets must have been previously loaded by
+     * {@link #preloadAssets(com.jme3.asset.AssetManager)}. TODO return an array
      *
      * @param part (not null)
      * @param genderCode "f" for female or "m" for male
@@ -183,7 +185,8 @@ class RyzomUtil {
 
     /**
      * Access the sorted array of known keywords for the specified gender and
-     * skeletal group.
+     * skeletal group. The assets must have been previously loaded by
+     * {@link #preloadAssets(com.jme3.asset.AssetManager)}.
      *
      * @param groupName "ca" or "ge"
      * @param genderCode "f" for female or "m" for male
