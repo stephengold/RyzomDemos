@@ -31,11 +31,15 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.SkeletonControl;
 import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
+import com.jme3.asset.AssetInfo;
+import com.jme3.asset.TextureKey;
+import com.jme3.export.binary.BinaryExporter;
 import com.jme3.font.Rectangle;
 import com.jme3.input.CameraInput;
 import com.jme3.input.KeyInput;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.MatParam;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -46,15 +50,26 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.shader.VarType;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.system.AppSettings;
+import com.jme3.texture.Texture;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import jme3utilities.Misc;
 import jme3utilities.MyAsset;
 import jme3utilities.MyCamera;
 import jme3utilities.MySpatial;
+import jme3utilities.MyString;
 import jme3utilities.debug.AxesVisualizer;
 import jme3utilities.debug.Dumper;
 import jme3utilities.debug.SkeletonVisualizer;
@@ -246,6 +261,7 @@ public class BuildCharacter extends ActionApplication {
         dim.bind("randomize allParts", KeyInput.KEY_R);
         dim.bind("randomize value", KeyInput.KEY_NUMPAD5);
 
+        dim.bind("save", KeyInput.KEY_COMMA);
         dim.bind("signal orbitLeft", KeyInput.KEY_A);
         dim.bind("signal orbitRight", KeyInput.KEY_D);
 
@@ -294,6 +310,10 @@ public class BuildCharacter extends ActionApplication {
                     return;
                 case "randomize value":
                     characterGui.randomizeValue();
+                    return;
+
+                case "save":
+                    save();
                     return;
 
                 case "toggle axes":
@@ -431,6 +451,34 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
+     * Save the loaded character model and its textures to the filesystem.
+     */
+    private void save() {
+        /*
+         * Create a clean copy of the model for writing.
+         */
+        Spatial cleanCopy = (Spatial) Misc.deepCopy(characterNode);
+        List<Spatial> allSpatials
+                = MySpatial.listSpatials(cleanCopy, Spatial.class, null);
+        for (Spatial spatial : allSpatials) {
+            spatial.setCullHint(Spatial.CullHint.Inherit);
+            spatial.setUserData("ryzom_alternate", null);
+        }
+        /*
+         * Use the time of day to construct an asset path for the J3O.
+         */
+        Calendar rightNow = Calendar.getInstance();
+        int hours = rightNow.get(Calendar.HOUR_OF_DAY);
+        int minutes = rightNow.get(Calendar.MINUTE);
+        int seconds = rightNow.get(Calendar.SECOND);
+        String hhmmss = String.format("%02d%02d%02d", hours, minutes, seconds);
+        String j3oAssetPath = String.format("Models/ryzom%s.j3o", hhmmss);
+
+        writeJ3O(cleanCopy, j3oAssetPath);
+        writeTextures(cleanCopy);
+    }
+
+    /**
      * Toggle visibility of the coordinate axes.
      */
     private void toggleAxes() {
@@ -489,6 +537,111 @@ public class BuildCharacter extends ActionApplication {
             rootNode.removeControl(axes);
             rootNode.removeControl(sv);
             characterNode = null;
+        }
+    }
+
+    /**
+     * Write the image of a texture to a JPG or PNG file.
+     *
+     * @param textureKey (not null, unaffected)
+     */
+    private void writeImage(TextureKey textureKey) {
+        String suffix = textureKey.getExtension();
+        String assetPath = textureKey.getName();
+
+        AssetInfo info = assetManager.locateAsset(textureKey);
+        InputStream stream = info.openStream();
+
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(stream);
+        } catch (IOException exception) {
+            logger.log(Level.SEVERE, "failed to read {0}",
+                    MyString.quote(assetPath));
+            throw new RuntimeException(exception);
+        }
+
+        String outputFilePath = ActionApplication.filePath(assetPath);
+        File outputFile = new File(outputFilePath);
+        /*
+         * Create the parent folder.
+         */
+        File parent = outputFile.getParentFile();
+        if (parent != null && !parent.exists()) {
+            boolean success = parent.mkdirs();
+            if (!success) {
+                logger.log(Level.SEVERE, "Mkdirs failed while saving {0}",
+                        MyString.quote(outputFilePath));
+                throw new RuntimeException();
+            }
+        }
+        /*
+         * Write the texture's BufferedImage in the
+         * format specified by its suffix.
+         */
+        try {
+            ImageIO.write(image, suffix, outputFile);
+        } catch (IOException exception) {
+            logger.log(Level.SEVERE, "failed to write {0}",
+                    MyString.quote(outputFilePath));
+            throw new RuntimeException(exception);
+        }
+        System.out.printf("Wrote texture to file %s.%n",
+                MyString.quote(outputFilePath));
+    }
+
+    /**
+     * Write the specified C-G model to a J3O file with the specified asset
+     * path.
+     *
+     * @param cgmRoot the root node of the model (not null, unaffected)
+     * @param assetPath (not null, ends with ".j3o")
+     */
+    private void writeJ3O(Spatial cgmRoot, String assetPath) {
+        String outputFilePath = ActionApplication.filePath(assetPath);
+        File outputFile = new File(outputFilePath);
+        try {
+            BinaryExporter.getInstance().save(cgmRoot, outputFile);
+        } catch (IOException exception) {
+            System.out.println("Caught IOException: " + exception.getMessage());
+            logger.log(Level.SEVERE,
+                    "Output exception while saving {0} to file {1}",
+                    new Object[]{
+                        MyString.quote(cgmRoot.getName()),
+                        MyString.quote(outputFilePath)
+                    });
+            return;
+        }
+
+        System.out.printf("Wrote %s to file %s.%n",
+                MyString.quote(cgmRoot.getName()),
+                MyString.quote(outputFilePath));
+    }
+
+    /**
+     * Write the image of each 2-D texture used in the specified model.
+     *
+     * @param cgmRoot the root node of the model (not null, unaffected)
+     */
+    private void writeTextures(Spatial cgmRoot) {
+        /*
+         * Collect all unique 2-D textures used in the model.
+         */
+        Set<TextureKey> textureKeys = new HashSet<>();
+        for (Material materials : MySpatial.listMaterials(cgmRoot, null)) {
+            for (MatParam matParam : materials.getParams()) {
+                if (matParam.getVarType() == VarType.Texture2D) {
+                    Texture texture = (Texture) matParam.getValue();
+                    TextureKey key = (TextureKey) texture.getKey();
+                    textureKeys.add(key);
+                }
+            }
+        }
+        /*
+         * Write each texture to a JPG file.
+         */
+        for (TextureKey textureKey : textureKeys) {
+            writeImage(textureKey);
         }
     }
 }
