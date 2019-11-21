@@ -369,12 +369,17 @@ class RyzomUtil {
                 for (String name : nameArray) {
                     String[] words = name.split("_");
                     for (String word : words) {
-                        // trim trailing digits
+                        /*
+                         * trim trailing digits
+                         */
                         while (word.matches("^.+[0-9]$")) {
                             word = word.substring(0, word.length() - 1);
                         }
-
-                        if (word.length() >= 3) {
+                        /*
+                         * exclude short words and ones that appear very often
+                         */
+                        if (word.length() >= 3 && !word.equals("end")
+                                && !word.equals("hof") && !word.equals("hom")) {
                             keywordSet.add(word);
                         }
                     }
