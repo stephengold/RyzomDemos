@@ -51,7 +51,13 @@ dependencies {
 }
 
 // cleanup tasks
-clean.dependsOn('cleanWrittenAssets')
+clean.dependsOn('cleanDLLs', 'cleanSOs', 'cleanWrittenAssets')
+task cleanDLLs(type: Delete) {
+    delete fileTree(dir: '.', include: '*.dll')
+}
+task cleanSOs(type: Delete) {
+    delete fileTree(dir: '.', include: '*.so')
+}
 task cleanWrittenAssets(type: Delete) {
     delete 'Written Assets'
 }
