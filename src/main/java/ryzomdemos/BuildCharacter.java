@@ -133,7 +133,7 @@ public class BuildCharacter extends ActionApplication {
     /**
      * AppState to manage the status overlay
      */
-    private StatusState statusState;
+    private StatusAppState statusAppState;
     // *************************************************************************
     // new methods exposed
 
@@ -188,8 +188,8 @@ public class BuildCharacter extends ActionApplication {
          * Update the selected Animation and play it.
          */
         AnimControl animControl = characterNode.getControl(AnimControl.class);
-        statusState.updateAnimationKeyword();
-        String animationName = statusState.updateAnimationName();
+        statusAppState.updateAnimationKeyword();
+        String animationName = statusAppState.updateAnimationName();
         animChannel = animControl.createChannel();
         setAnim(animationName);
         /*
@@ -223,9 +223,9 @@ public class BuildCharacter extends ActionApplication {
         /*
          * Capture a screenshot each time KEY_SYSRQ (the PrtSc key) is pressed.
          */
-        ScreenshotAppState screenShotState
+        ScreenshotAppState screenshotAppState
                 = new ScreenshotAppState("Written Assets/", "screenshot");
-        boolean success = stateManager.attach(screenShotState);
+        boolean success = stateManager.attach(screenshotAppState);
         assert success;
 
         configureCamera();
@@ -241,8 +241,8 @@ public class BuildCharacter extends ActionApplication {
 
         Locators.registerFilesystem(RyzomUtil.assetRoot);
 
-        statusState = new StatusState();
-        stateManager.attach(statusState);
+        statusAppState = new StatusAppState();
+        stateManager.attach(statusAppState);
     }
 
     /**
@@ -301,24 +301,24 @@ public class BuildCharacter extends ActionApplication {
                     return;
 
                 case "next statusLine":
-                    statusState.advanceSelectedLine(+1);
+                    statusAppState.advanceSelectedLine(+1);
                     return;
                 case "next value":
-                    statusState.nextValue();
+                    statusAppState.nextValue();
                     return;
 
                 case "previous statusLine":
-                    statusState.advanceSelectedLine(-1);
+                    statusAppState.advanceSelectedLine(-1);
                     return;
                 case "previous value":
-                    statusState.previousValue();
+                    statusAppState.previousValue();
                     return;
 
                 case "randomize allParts":
-                    statusState.randomizeAllParts();
+                    statusAppState.randomizeAllParts();
                     return;
                 case "randomize value":
-                    statusState.randomizeValue();
+                    statusAppState.randomizeValue();
                     return;
 
                 case "save":
@@ -406,11 +406,11 @@ public class BuildCharacter extends ActionApplication {
          * (including a SkeletonControl and an AnimControl but no geometries)
          * and attach it to the scene graph.
          */
-        characterNode = statusState.attachCharacterNode(rootNode);
+        characterNode = statusAppState.attachCharacterNode(rootNode);
         /*
          * Attach body parts to the character node.
          */
-        statusState.attachBodyParts(characterNode);
+        statusAppState.attachBodyParts(characterNode);
         /*
          * Configure the model to cast shadows, but not receive them.
          */

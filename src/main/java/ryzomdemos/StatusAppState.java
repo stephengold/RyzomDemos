@@ -50,7 +50,7 @@ import jme3utilities.math.MyMath;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class StatusState extends SimpleAppState {
+public class StatusAppState extends SimpleAppState {
     // *************************************************************************
     // constants and loggers
 
@@ -83,7 +83,7 @@ public class StatusState extends SimpleAppState {
      * message logger for this class
      */
     final public static Logger logger
-            = Logger.getLogger(StatusState.class.getName());
+            = Logger.getLogger(StatusAppState.class.getName());
     // *************************************************************************
     // fields
 
@@ -118,7 +118,7 @@ public class StatusState extends SimpleAppState {
     /**
      * Instantiate an uninitialized enabled state.
      */
-    public StatusState() {
+    public StatusAppState() {
         super(true);
     }
     // *************************************************************************
@@ -298,7 +298,7 @@ public class StatusState extends SimpleAppState {
     // ActionAppState methods
 
     /**
-     * Clean up this state during the first update after it gets detached.
+     * Clean up this AppState during the first update after it gets detached.
      * Should be invoked only by a subclass or by the AppStateManager.
      */
     @Override
@@ -354,8 +354,8 @@ public class StatusState extends SimpleAppState {
     }
 
     /**
-     * Callback to update this state prior to rendering. (Invoked once per frame
-     * while the state is attached and enabled.)
+     * Callback to update this AppState prior to rendering. (Invoked once per
+     * frame while the state is attached and enabled.)
      *
      * @param tpf time interval between frames (in seconds, &ge;0)
      */
