@@ -213,13 +213,6 @@ public class BuildCharacter extends ActionApplication {
         sv = new SkeletonVisualizer(assetManager, skeletonControl);
         sv.setLineColor(ColorRGBA.Yellow);
         rootNode.addControl(sv);
-        /*
-         * Add a visualizer for the world axes. TODO separate method
-         */
-        float axisLength = 0.8f;
-        axes = new AxesVisualizer(assetManager, axisLength);
-        axes.setLineWidth(0f);
-        rootNode.addControl(axes);
     }
 
     /**
@@ -267,8 +260,12 @@ public class BuildCharacter extends ActionApplication {
         ColorRGBA bgColor = new ColorRGBA(0.2f, 0.2f, 1f, 1f);
         viewPort.setBackgroundColor(bgColor);
         addLighting();
-
+        /*
+         * Hide the render statistics overlay.
+         */
         stateManager.getState(StatsAppState.class).toggleStats();
+
+        addAxes();
         addBox();
 
         Locators.registerFilesystem(RyzomUtil.assetRoot);
@@ -380,6 +377,16 @@ public class BuildCharacter extends ActionApplication {
     }
     // *************************************************************************
     // private methods
+
+    /**
+     * Add a visualizer for the world axes.
+     */
+    private void addAxes() {
+        float axisLength = 0.8f;
+        axes = new AxesVisualizer(assetManager, axisLength);
+        axes.setLineWidth(0f);
+        rootNode.addControl(axes);
+    }
 
     /**
      * Attach a large static Box to the scene, to serve as a platform.
@@ -535,7 +542,6 @@ public class BuildCharacter extends ActionApplication {
     private void unloadCharacter() {
         if (characterNode != null) {
             characterNode.removeFromParent();
-            rootNode.removeControl(axes);
             rootNode.removeControl(sv);
             characterNode = null;
         }
