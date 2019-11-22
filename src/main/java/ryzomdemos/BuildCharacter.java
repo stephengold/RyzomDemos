@@ -81,7 +81,7 @@ import jme3utilities.ui.Locators;
 
 /**
  * A JME3 application to demonstrate character construction using assets
- * imported from the Ryzom Asset Repository by Alweth's RyzomConverter.
+ * exported from the Ryzom Asset Repository by Alweth's RyzomConverter.
  *
  * @author Stephen Gold sgold@sonic.net
  */

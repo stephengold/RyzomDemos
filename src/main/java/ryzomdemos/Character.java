@@ -32,7 +32,7 @@ import java.util.EnumMap;
 import java.util.logging.Logger;
 
 /**
- * Describe a character body that's constructed out of assets imported from the
+ * Describe a character body that's constructed out of assets exported from the
  * Ryzom Asset Repository by Alweth's RyzomConverter. TODO make Savable
  *
  * @author Stephen Gold sgold@sonic.net
