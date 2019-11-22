@@ -27,6 +27,7 @@ You control `BuildCharacter` using hotkeys:
  + H : show/hide the help overlay
  + up/down : cycle through the properties
  + left/right : cycle through values for the selected property
+ + Num7/Num9 : skip back/forward past 6 values of the selected property
  + Num5 : randomize the selected property
  + R : randomize all 7 body-part properties
  + W/A/S/D/Q/Z : dolly forward, orbit left, dolly back, orbit right, rise, fall

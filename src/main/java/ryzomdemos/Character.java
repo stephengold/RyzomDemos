@@ -30,6 +30,7 @@ import com.jme3.asset.ModelKey;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.logging.Logger;
+import jme3utilities.math.MyMath;
 
 /**
  * Describe a character body that's constructed out of assets exported from the
@@ -107,6 +108,38 @@ class Character implements Cloneable {
         }
 
         return result;
+    }
+
+    /**
+     * Advance the asset selection for the specified body part by the specified
+     * amount.
+     *
+     * @param part (not null)
+     * @param amount the number of assets to advance, including null
+     */
+    void advanceAssetFor(BodyPart part, int amount) {
+        String[] known = RyzomUtil.knownGeometries(part, gender);
+        String selected = assets.get(part);
+
+        int index;
+        if (selected == null) {
+            index = -1;
+        } else {
+            index = Arrays.binarySearch(known, selected);
+            if (index < 0) {
+                index = -1;
+            }
+        }
+        int numKnown = known.length;
+        assert numKnown > 0 : numKnown;
+        index = MyMath.modulo(index + amount, numKnown + 1);
+        if (index == numKnown) {
+            selected = null;
+        } else {
+            selected = known[index];
+        }
+
+        setGeometry(part, selected);
     }
 
     /**
@@ -212,64 +245,6 @@ class Character implements Cloneable {
         ModelKey key = new ModelKey(assetPath);
 
         return key;
-    }
-
-    /**
-     * Select the next known asset for the specified body part to match the
-     * character's gender.
-     *
-     * @param part (not null)
-     */
-    void nextAssetFor(BodyPart part) {
-        String[] known = RyzomUtil.knownGeometries(part, gender);
-        int numKnown = known.length;
-        assert numKnown > 0 : numKnown;
-
-        String selected = assets.get(part);
-        String next;
-        if (selected == null) {
-            next = known[0];
-        } else {
-            int index = Arrays.binarySearch(known, selected);
-            if (index < 0) {
-                next = known[0];
-            } else if (index == numKnown - 1) {
-                next = null;
-            } else {
-                next = known[index + 1];
-            }
-        }
-
-        setGeometry(part, next);
-    }
-
-    /**
-     * Select the previous geometry asset for the specified body part to match
-     * the character's gender.
-     *
-     * @param part (not null)
-     */
-    void previousAssetFor(BodyPart part) {
-        String[] known = RyzomUtil.knownGeometries(part, gender);
-        int numKnown = known.length;
-        assert numKnown > 0 : numKnown;
-
-        String selected = assets.get(part);
-        String previous;
-        if (selected == null) {
-            previous = known[numKnown - 1];
-        } else {
-            int index = Arrays.binarySearch(known, selected);
-            if (index < 0) {
-                previous = known[numKnown - 1];
-            } else if (index == 0) {
-                previous = null;
-            } else {
-                previous = known[index - 1];
-            }
-        }
-
-        setGeometry(part, previous);
     }
 
     /**

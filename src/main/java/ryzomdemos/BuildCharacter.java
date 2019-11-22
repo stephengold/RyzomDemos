@@ -285,6 +285,8 @@ public class BuildCharacter extends ActionApplication {
         /*
          * navigate the status overlay
          */
+        dim.bind("jumpNext value", KeyInput.KEY_NUMPAD9);
+        dim.bind("jumpPrevious value", KeyInput.KEY_NUMPAD7);
         dim.bind("next statusLine", KeyInput.KEY_DOWN);
         dim.bind("next statusLine", KeyInput.KEY_NUMPAD2);
         dim.bind("next value", KeyInput.KEY_EQUALS);
@@ -330,18 +332,25 @@ public class BuildCharacter extends ActionApplication {
                     dumper.dump(renderManager);
                     return;
 
+                case "jumpNext value":
+                    config.advanceValue(+7);
+                    return;
+                case "jumpPrevious value":
+                    config.advanceValue(-7);
+                    return;
+
                 case "next statusLine":
                     config.advanceSelectedField(+1);
                     return;
                 case "next value":
-                    config.nextValue();
+                    config.advanceValue(+1);
                     return;
 
                 case "previous statusLine":
                     config.advanceSelectedField(-1);
                     return;
                 case "previous value":
-                    config.previousValue();
+                    config.advanceValue(-1);
                     return;
 
                 case "randomize allParts":

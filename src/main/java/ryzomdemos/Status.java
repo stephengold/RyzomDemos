@@ -109,6 +109,39 @@ class Status {
     }
 
     /**
+     * Advance the value for the selected field by the specified amount. (If the
+     * selected field is "gender" or "group" then simply toggle the field.)
+     *
+     * @param amount
+     */
+    void advanceValue(int amount) {
+        switch (selectedField) {
+            case StatusAppState.animationStatusLine:
+                advanceAnimation(amount);
+                break;
+            case StatusAppState.genderStatusLine:
+                character.toggleGender();
+                character.adjustAssetsForGender();
+                updateKeyword();
+                updateAnimation();
+                break;
+            case StatusAppState.groupStatusLine:
+                character.toggleGroup();
+                updateKeyword();
+                updateAnimation();
+                break;
+            case StatusAppState.keywordStatusLine:
+                advanceKeyword(amount);
+                break;
+            default:
+                int ordinal
+                        = selectedField - StatusAppState.firstPartStatusLine;
+                BodyPart part = BodyPart.values()[ordinal];
+                character.advanceAssetFor(part, amount);
+        }
+    }
+
+    /**
      * Read the name of the animation.
      *
      * @return the animation name (not null)
@@ -216,64 +249,6 @@ class Status {
     }
 
     /**
-     * Select the next value for the selected field.
-     */
-    void nextValue() {
-        switch (selectedField) {
-            case StatusAppState.animationStatusLine:
-                nextAnimation();
-                break;
-            case StatusAppState.genderStatusLine:
-                character.toggleGender();
-                character.adjustAssetsForGender();
-                updateKeyword();
-                updateAnimation();
-                break;
-            case StatusAppState.groupStatusLine:
-                character.toggleGroup();
-                updateKeyword();
-                updateAnimation();
-                break;
-            case StatusAppState.keywordStatusLine:
-                nextKeyword();
-                break;
-            default:
-                int ordinal = selectedField - StatusAppState.firstPartStatusLine;
-                BodyPart part = BodyPart.values()[ordinal];
-                character.nextAssetFor(part);
-        }
-    }
-
-    /**
-     * Select the previous value for the selected field.
-     */
-    void previousValue() {
-        switch (selectedField) {
-            case StatusAppState.animationStatusLine:
-                previousAnimation();
-                break;
-            case StatusAppState.genderStatusLine:
-                character.toggleGender();
-                character.adjustAssetsForGender();
-                updateKeyword();
-                updateAnimation();
-                break;
-            case StatusAppState.groupStatusLine:
-                character.toggleGroup();
-                updateKeyword();
-                updateAnimation();
-                break;
-            case StatusAppState.keywordStatusLine:
-                previousKeyword();
-                break;
-            default:
-                int ordinal = selectedField - StatusAppState.firstPartStatusLine;
-                BodyPart part = BodyPart.values()[ordinal];
-                character.previousAssetFor(part);
-        }
-    }
-
-    /**
      * Pseudo-randomly configure geometry assets.
      */
     void randomizeAllParts() {
@@ -362,73 +337,37 @@ class Status {
     // private methods
 
     /**
-     * Select the next animation.
+     * Advance the animation selection by the specified amount.
+     *
+     * @param amount the number of animations to advance
      */
-    private void nextAnimation() {
-        List<String> names = knownAnimations();
-        int lastIndex = names.size() - 1;
-        int arrayIndex = Collections.binarySearch(names, animation);
-
-        if (arrayIndex < 0) {
-            animation = names.get(0);
-        } else if (arrayIndex >= lastIndex) {
-            animation = names.get(0);
+    private void advanceAnimation(int amount) {
+        List<String> nameList = knownAnimations();
+        int index = Collections.binarySearch(nameList, animation);
+        if (index < 0) {
+            animation = nameList.get(0);
         } else {
-            animation = names.get(arrayIndex + 1);
+            assert nameList.get(index).equals(animation);
+            index = MyMath.modulo(index + amount, nameList.size());
+            animation = nameList.get(index);
         }
     }
 
     /**
-     * Select the next animation keyword and update the animation accordingly.
+     * Advance the keyword selection by the specified amount and update the
+     * animation selection accordingly.
+     *
+     * @param amount the number of keywords to advance
      */
-    private void nextKeyword() {
+    private void advanceKeyword(int amount) {
         String[] keywordArray = knownKeywords();
-        int lastIndex = keywordArray.length - 1;
-        int arrIndex = Arrays.binarySearch(keywordArray, keyword);
-
-        if (arrIndex < 0) {
-            keyword = keywordArray[0];
-        } else if (arrIndex >= lastIndex) {
+        int index = Arrays.binarySearch(keywordArray, keyword);
+        if (index < 0) {
             keyword = keywordArray[0];
         } else {
-            keyword = keywordArray[arrIndex + 1];
-        }
-
-        updateAnimation();
-    }
-
-    /**
-     * Select the previous animation.
-     */
-    private void previousAnimation() {
-        List<String> names = knownAnimations();
-        int lastIndex = names.size() - 1;
-        int listIndex = Collections.binarySearch(names, animation);
-
-        if (listIndex < 0) {
-            animation = names.get(lastIndex);
-        } else if (listIndex == 0) {
-            animation = names.get(lastIndex);
-        } else {
-            animation = names.get(listIndex - 1);
-        }
-    }
-
-    /**
-     * Select the previous animation keyword and update the animation
-     * accordingly.
-     */
-    private void previousKeyword() {
-        String[] keywordArray = knownKeywords();
-        int lastIndex = keywordArray.length - 1;
-        int arrayIndex = Arrays.binarySearch(keywordArray, keyword);
-
-        if (arrayIndex < 0) {
-            keyword = keywordArray[0];
-        } else if (arrayIndex == 0) {
-            keyword = keywordArray[lastIndex];
-        } else {
-            keyword = keywordArray[arrayIndex - 1];
+            assert keywordArray[index].equals(keyword);
+            index = MyMath.modulo(index + amount, keywordArray.length);
+            keyword = keywordArray[index];
         }
 
         updateAnimation();
