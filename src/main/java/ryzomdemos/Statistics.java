@@ -35,7 +35,6 @@ import com.jme3.material.plugins.J3MLoader;
 import com.jme3.texture.plugins.AWTLoader;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -95,9 +94,9 @@ public class Statistics {
             String genderName = genderCode.equals("f") ? "females" : "males";
             out.printf("For %s there are:%n", genderName);
             for (BodyPart part : BodyPart.values()) {
-                List<String> geometryNames
+                String[] geometryNames
                         = RyzomUtil.knownGeometries(part, genderCode);
-                int numGeometries = geometryNames.size();
+                int numGeometries = geometryNames.length;
                 out.printf("%4d %s geometries assets%n", numGeometries, part);
                 numCombosForGender *= numGeometries + 1; // +1 for no geometry
             }

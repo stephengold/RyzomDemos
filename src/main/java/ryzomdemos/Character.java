@@ -27,9 +27,8 @@
 package ryzomdemos;
 
 import com.jme3.asset.ModelKey;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -222,22 +221,22 @@ class Character implements Cloneable {
      * @param part (not null)
      */
     void nextAssetFor(BodyPart part) {
-        List<String> known = RyzomUtil.knownGeometries(part, gender);
-        int numKnown = known.size();
+        String[] known = RyzomUtil.knownGeometries(part, gender);
+        int numKnown = known.length;
         assert numKnown > 0 : numKnown;
 
         String selected = assets.get(part);
         String next;
         if (selected == null) {
-            next = known.get(0);
+            next = known[0];
         } else {
-            int index = Collections.binarySearch(known, selected);
+            int index = Arrays.binarySearch(known, selected);
             if (index < 0) {
-                next = known.get(0);
+                next = known[0];
             } else if (index == numKnown - 1) {
                 next = null;
             } else {
-                next = known.get(index + 1);
+                next = known[index + 1];
             }
         }
 
@@ -251,22 +250,22 @@ class Character implements Cloneable {
      * @param part (not null)
      */
     void previousAssetFor(BodyPart part) {
-        List<String> known = RyzomUtil.knownGeometries(part, gender);
-        int numKnown = known.size();
+        String[] known = RyzomUtil.knownGeometries(part, gender);
+        int numKnown = known.length;
         assert numKnown > 0 : numKnown;
 
         String selected = assets.get(part);
         String previous;
         if (selected == null) {
-            previous = known.get(numKnown - 1);
+            previous = known[numKnown - 1];
         } else {
-            int index = known.indexOf(selected);
-            if (index == -1) {
-                previous = known.get(numKnown - 1);
+            int index = Arrays.binarySearch(known, selected);
+            if (index < 0) {
+                previous = known[numKnown - 1];
             } else if (index == 0) {
                 previous = null;
             } else {
-                previous = known.get(index - 1);
+                previous = known[index - 1];
             }
         }
 
@@ -279,7 +278,7 @@ class Character implements Cloneable {
      * @param part (not null)
      */
     void randomize(BodyPart part) {
-        List<String> known = RyzomUtil.knownGeometries(part, gender);
+        String[] known = RyzomUtil.knownGeometries(part, gender);
         String assetName = (String) RyzomUtil.generator.pick(known);
         setGeometry(part, assetName);
     }

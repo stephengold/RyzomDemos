@@ -277,13 +277,13 @@ public class StatusAppState extends SimpleAppState {
 
         String genderCode = character.genderCode();
         for (BodyPart part : BodyPart.values()) {
-            List<String> known = RyzomUtil.knownGeometries(part, genderCode);
+            String[] known = RyzomUtil.knownGeometries(part, genderCode);
             String assetName = character.geometryName(part);
             if (assetName == null) {
                 text = String.format("%s: <none>", part);
             } else {
-                index = 1 + Collections.binarySearch(known, assetName);
-                count = known.size();
+                index = 1 + Arrays.binarySearch(known, assetName);
+                count = known.length;
                 text = String.format("%s #%d of %d: %s",
                         part, index, count, assetName);
             }

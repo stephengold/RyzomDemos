@@ -31,12 +31,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.scene.Spatial;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -54,10 +51,6 @@ class RyzomUtil {
     // *************************************************************************
     // constants and loggers
 
-    /**
-     * initial capacity for asset lists
-     */
-    final private static int initialCapacity = 120; // TODO Set -> List
     /**
      * status interval (in nanoseconds)
      */
@@ -87,16 +80,16 @@ class RyzomUtil {
     // fields
 
     /**
-     * all known geometry assets for female characters, each list sorted
+     * all known geometry assets for female characters, each array sorted
      * lexicographically
      */
-    final private static EnumMap<BodyPart, List<String>> knownFemaleAssets
+    final private static EnumMap<BodyPart, String[]> knownFemaleAssets
             = new EnumMap<>(BodyPart.class);
     /**
-     * all known geometry assets for male characters, each list sorted
+     * all known geometry assets for male characters, each array sorted
      * lexicographically
      */
-    final private static EnumMap<BodyPart, List<String>> knownMaleAssets
+    final private static EnumMap<BodyPart, String[]> knownMaleAssets
             = new EnumMap<>(BodyPart.class);
     /**
      * pseudo-random generator
@@ -155,16 +148,15 @@ class RyzomUtil {
     /**
      * Access the sorted list of known geometry assets for the specified body
      * part and gender. The assets must have been previously loaded by
-     * {@link #preloadAssets(com.jme3.asset.AssetManager)}. TODO return an array
+     * {@link #preloadAssets(com.jme3.asset.AssetManager)}.
      *
      * @param part (not null)
      * @param genderCode "f" for female or "m" for male
-     * @return the internal list of asset names (not null, in lexicographic
+     * @return the internal array of asset names (not null, in lexicographic
      * order)
      */
-    static List<String> knownGeometries(BodyPart part,
-            String genderCode) {
-        EnumMap<BodyPart, List<String>> map;
+    static String[] knownGeometries(BodyPart part, String genderCode) {
+        EnumMap<BodyPart, String[]> map;
         if (genderCode.equals("m")) {
             map = knownMaleAssets;
         } else {
@@ -172,11 +164,7 @@ class RyzomUtil {
             map = knownFemaleAssets;
         }
 
-        List<String> result = map.get(part);
-        if (result == null) { // lazy allocation of lists
-            result = new ArrayList<>(initialCapacity);
-            map.put(part, result);
-        }
+        String[] result = map.get(part);
 
         assert SortUtil.isSorted(result);
         assert result != null;
@@ -217,14 +205,20 @@ class RyzomUtil {
 
         int progressCount = 0;
         long nextStatus = System.nanoTime();
+        Map<String, Set<String>> tmpMap = new TreeMap<>();
         for (String fileName : fileNames) {
             if (fileName.matches("^(ca|fy|ge|ma|tr|zo).*$")) {
                 // geometries asset
                 BodyPart bodyPart = bodyPart(fileName, assetManager);
                 String assetName = fileName.replace(".j3o", "");
-                String gender = genderOfGeometryAsset(assetName);
-                List<String> known = knownGeometries(bodyPart, gender);
-                known.add(assetName);
+                String genderCode = genderOfGeometryAsset(assetName);
+                String key = genderCode + bodyPart;
+                Set<String> names = tmpMap.get(key);
+                if (names == null) {
+                    names = new TreeSet<>();
+                    tmpMap.put(key, names);
+                }
+                names.add(assetName);
 
             } else if (fileName.matches("^animations_.*$")) {
                 // animations asset
@@ -244,11 +238,19 @@ class RyzomUtil {
         printStatus(progressCount, numFiles);
 
         for (BodyPart part : BodyPart.values()) {
-            List<String> fList = knownFemaleAssets.get(part);
-            Collections.sort(fList);
+            String fKey = "f" + part;
+            Set<String> fNames = tmpMap.get(fKey);
+            String[] fArray = new String[fNames.size()];
+            fNames.toArray(fArray);
+            assert SortUtil.isSorted(fArray);
+            knownFemaleAssets.put(part, fArray);
 
-            List<String> mList = knownMaleAssets.get(part);
-            Collections.sort(mList);
+            String mKey = "m" + part;
+            Set<String> mNames = tmpMap.get(mKey);
+            String[] mArray = new String[mNames.size()];
+            mNames.toArray(mArray);
+            assert SortUtil.isSorted(mArray);
+            knownMaleAssets.put(part, mArray);
         }
 
         populateKeywords();
