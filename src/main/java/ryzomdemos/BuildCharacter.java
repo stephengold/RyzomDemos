@@ -452,11 +452,13 @@ public class BuildCharacter extends ActionApplication {
          */
         statusAppState.attachBodyParts(characterNode);
         /*
-         * Configure the model to cast shadows, but not receive them.
+         * Disable culling and configure the model to cast shadows,
+         * but not receive them.
          */
         List<Spatial> list
                 = MySpatial.listSpatials(characterNode, Spatial.class, null);
         for (Spatial spatial : list) {
+            spatial.setCullHint(Spatial.CullHint.Never);
             spatial.setShadowMode(RenderQueue.ShadowMode.Cast);
         }
     }
@@ -511,6 +513,7 @@ public class BuildCharacter extends ActionApplication {
                 = MySpatial.listSpatials(cleanCopy, Spatial.class, null);
         for (Spatial spatial : allSpatials) {
             spatial.setCullHint(Spatial.CullHint.Inherit);
+            spatial.setShadowMode(RenderQueue.ShadowMode.Inherit);
             spatial.setUserData("ryzom_alternate", null);
         }
         /*
