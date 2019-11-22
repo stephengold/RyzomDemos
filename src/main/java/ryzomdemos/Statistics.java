@@ -40,7 +40,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
- * Console application to report statistics on assets imported from the Ryzom
+ * Console application to report statistics on assets exported from the Ryzom
  * Asset Repository by Alweth's RyzomConverter.
  *
  * @author Stephen Gold sgold@sonic.net
@@ -81,7 +81,11 @@ public class Statistics {
         assetManager.registerLocator(RyzomUtil.assetRoot, FileLocator.class);
         assetManager.registerLocator(null, ClasspathLocator.class);
 
-        RyzomUtil.preloadAssets(assetManager);
+        boolean success = RyzomUtil.readMaps();
+        if (!success) {
+            RyzomUtil.preloadAssets(assetManager);
+            RyzomUtil.writeMaps();
+        }
 
         out = System.out;
         out.println();

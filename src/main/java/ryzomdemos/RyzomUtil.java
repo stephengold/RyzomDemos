@@ -29,8 +29,15 @@ package ryzomdemos;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
+import com.jme3.export.binary.ByteUtils;
 import com.jme3.scene.Spatial;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -42,7 +49,7 @@ import java.util.logging.Logger;
 import jme3utilities.math.noise.Generator;
 
 /**
- * Utility methods to interact with assets imported from the Ryzom Asset
+ * Utility methods to interact with assets exported from the Ryzom Asset
  * Repository by Alweth's RyzomConverter.
  *
  * @author Stephen Gold sgold@sonic.net
@@ -61,13 +68,17 @@ class RyzomUtil {
     final public static Logger logger
             = Logger.getLogger(RyzomUtil.class.getName());
     /**
-     * prefix for asset paths of converted assets
+     * prefix for asset paths of exported assets
      */
     final static String assetPathPrefix = "/ryzom-assets/export/";
     /**
      * filesystem path to the asset root
      */
     final static String assetRoot = "../RyzomConverter/assets";
+    /**
+     * filesystem path to the summary file
+     */
+    final private static String summaryPathname = "./ryzom-summary.bin";
     /**
      * all gender codes
      */
@@ -111,7 +122,7 @@ class RyzomUtil {
     // new methods exposed
 
     /**
-     * Test whether the named asset exists (among converted assets in the
+     * Test whether the named asset exists (among exported assets in the
      * filesystem). Works for both animation assets and geometry assets.
      *
      * @param assetName (not null)
@@ -190,13 +201,17 @@ class RyzomUtil {
     }
 
     /**
-     * Preload all assets in the converted directory. Assign each geometries
-     * asset to a list based on its body part and gender. Also build lists of
-     * animation names for each skeletal group and gender.
+     * Preload all assets in the export directory. Assign each geometries asset
+     * to a list based on its body part and gender. Also build lists of
+     * animation names and keywords for each skeletal group and gender.
      *
      * @param assetManager the assetManager to use (not null)
      */
     static void preloadAssets(AssetManager assetManager) {
+        knownFemaleAssets.clear();
+        knownMaleAssets.clear();
+        knownAnimations.clear();
+
         String directoryPath = assetRoot + assetPathPrefix;
         File directory = new File(directoryPath);
         assert directory.isDirectory();
@@ -223,8 +238,8 @@ class RyzomUtil {
             } else if (fileName.matches("^animations_.*$")) {
                 // animations asset
                 String[] animations = listAnimations(fileName, assetManager);
-                String genderCode = fileName.substring(16, 17);
                 String groupName = fileName.substring(11, 13);
+                String genderCode = fileName.substring(16, 17);
                 String key = groupName + genderCode;
                 knownAnimations.put(key, animations);
             }
@@ -254,6 +269,68 @@ class RyzomUtil {
         }
 
         populateKeywords();
+    }
+
+    /**
+     * Attempt to quickly populate the lists of geometries, animation names, and
+     * keywords by reading them from a well-known file.
+     *
+     * @return true if successful, otherwise false
+     */
+    static boolean readMaps() {
+        knownFemaleAssets.clear();
+        knownMaleAssets.clear();
+        knownAnimations.clear();
+
+        File file = new File(summaryPathname);
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException exception) {
+            return false;
+        }
+
+        try {
+            readMaps(inputStream);
+        } catch (IOException exception) {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Attempt to write the lists of geometries, animation names, and keywords
+     * to a well-known file.
+     *
+     * @return true if successful, otherwise false
+     */
+    static boolean writeMaps() {
+        File file = new File(summaryPathname);
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException exception) {
+            return false;
+        }
+
+        try {
+            writeMaps(outputStream);
+        } catch (IOException exception) {
+            try {
+                outputStream.close();
+            } catch (IOException ex) {
+            }
+            file.delete();
+
+            return false;
+        }
+
+        return true;
     }
     // *************************************************************************
     // private methods
@@ -412,5 +489,139 @@ class RyzomUtil {
                 progressCount, numFiles, percentage);
         System.out.println(msg);
         System.out.flush();
+    }
+
+    /**
+     * Populate the lists of geometries, animation names, and keywords by
+     * reading them from the specified Stream.
+     *
+     * @param listStream the Stream to read (not null)
+     */
+    private static void readMaps(InputStream listsStream) throws IOException {
+        for (BodyPart part : BodyPart.values()) {
+            String[] fArray = readStringArray(listsStream);
+            knownFemaleAssets.put(part, fArray);
+
+            String[] mArray = readStringArray(listsStream);
+            knownMaleAssets.put(part, mArray);
+        }
+
+        for (String groupName : RyzomUtil.groupNameArray) {
+            for (String genderCode : RyzomUtil.genderCodeArray) {
+                String key = groupName + genderCode;
+
+                String[] animationNames = readStringArray(listsStream);
+                knownAnimations.put(key, animationNames);
+
+                String[] animationKeywords = readStringArray(listsStream);
+                knownKeywords.put(key, animationKeywords);
+            }
+        }
+    }
+
+    /**
+     * Read a String from the specified Stream.
+     *
+     * @param inputStream (not null)
+     * @return the String that was read (may be null)
+     * @throws IOException
+     */
+    private static String readString(InputStream inputStream)
+            throws IOException {
+        int lengthInBytes = ByteUtils.readInt(inputStream);
+
+        String result;
+        if (lengthInBytes == -1) {
+            result = null;
+        } else {
+            byte[] byteArray = new byte[lengthInBytes];
+            ByteUtils.readData(byteArray, lengthInBytes, inputStream);
+            result = new String(byteArray);
+        }
+
+        return result;
+    }
+
+    /**
+     * Read an array of strings from the specified Stream.
+     *
+     * @param inputStream (not null)
+     * @return the Array that was read (not null, may contains nulls)
+     * @throws IOException
+     */
+    private static String[] readStringArray(InputStream inputStream)
+            throws IOException {
+        int length = ByteUtils.readInt(inputStream);
+        String[] result = new String[length];
+        for (int arrayIndex = 0; arrayIndex < length; ++arrayIndex) {
+            result[arrayIndex] = readString(inputStream);
+        }
+
+        return result;
+    }
+
+    /**
+     * Write the lists of geometries, animation names, and keywords to the
+     * specified Stream.
+     *
+     * @param listStream the Stream to write (not null)
+     */
+    private static void writeMaps(OutputStream listsStream) throws IOException {
+        for (BodyPart part : BodyPart.values()) {
+            String[] fArray = knownFemaleAssets.get(part);
+            writeStringArray(listsStream, fArray);
+
+            String[] mArray = knownMaleAssets.get(part);
+            writeStringArray(listsStream, mArray);
+        }
+
+        for (String groupName : RyzomUtil.groupNameArray) {
+            for (String genderCode : RyzomUtil.genderCodeArray) {
+                String key = groupName + genderCode;
+
+                String[] animationNames = knownAnimations.get(key);
+                writeStringArray(listsStream, animationNames);
+
+                String[] animationKeywords = knownKeywords.get(key);
+                writeStringArray(listsStream, animationKeywords);
+            }
+        }
+    }
+
+    /**
+     * Write a String to the specified Stream.
+     *
+     * @param inputStream (not null)
+     * @return the String to write (may be null)
+     * @throws IOException
+     */
+    private static void writeString(OutputStream outputStream, String string)
+            throws IOException {
+        if (string == null) {
+            ByteUtils.writeInt(outputStream, -1);
+        } else {
+            byte[] byteArray = string.getBytes();
+            int lengthInBytes = byteArray.length;
+            ByteUtils.writeInt(outputStream, lengthInBytes);
+            outputStream.write(byteArray);
+        }
+    }
+
+    /**
+     * Write an array of strings to the specified Stream.
+     *
+     * @param outputStream (not null)
+     * @param array the Array to write (not null, may contains nulls,
+     * unaffected)
+     * @throws IOException
+     */
+    private static void writeStringArray(OutputStream outputStream,
+            String[] array)
+            throws IOException {
+        int length = array.length;
+        ByteUtils.writeInt(outputStream, length);
+        for (int arrayIndex = 0; arrayIndex < length; ++arrayIndex) {
+            writeString(outputStream, array[arrayIndex]);
+        }
     }
 }

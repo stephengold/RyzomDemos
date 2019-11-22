@@ -193,7 +193,12 @@ public class StatusAppState extends SimpleAppState {
         appInstance = (BuildCharacter) app;
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        RyzomUtil.preloadAssets(assetManager);
+
+        boolean success = RyzomUtil.readMaps();
+        if (!success) {
+            RyzomUtil.preloadAssets(assetManager);
+            RyzomUtil.writeMaps();
+        }
         /*
          * Add the status lines to the guiNode.
          */

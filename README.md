@@ -1,4 +1,4 @@
-The RyzomDemos project demonstrates how to use assets imported
+The RyzomDemos project demonstrates how to use assets exported
 from the Ryzom Asset Repository by means of Alweth's `RyzomConverter`.
 
 ## BuildCharacter
@@ -15,8 +15,12 @@ The number of possible body configurations exceeds 6 x 10^11.
   4. `cd RyzomDemos`
   5. `./gradlew run`
 
-`BuildCharacter` processes 701 files during initialization.
+The first time it is run,
+`BuildCharacter` processes 701 exported files during initialization
+and generates a summary file.
 This may take 10 seconds or more; please be patient.
+On successive runs, the summary file is used instead,
+so initialization should much quicker.
 
 You control `BuildCharacter` using hotkeys:
 
@@ -48,5 +52,8 @@ and providing it free of charge.
 
 ## Statistics
 
-The `Statistics` application calculates statistics
-related to the imported assets and prints a report to `System.out`.
+The `Statistics` application derives statistics
+from the exported assets and prints a report to `System.out`.
+
+If the `Statistics` application doesn't find a summary file,
+it should generate one.
