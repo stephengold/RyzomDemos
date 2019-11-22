@@ -227,17 +227,17 @@ public class StatusAppState extends SimpleAppState {
         }
 
         updateCharacter();
+        String animationName = config.animationName();
+        appInstance.setAnimation(animationName, 0f);
         appInstance.updateFeatureVisibility();
 
         List<String> nameList = config.knownAnimations();
-        String animationName = config.animationName();
         int index = 1 + Collections.binarySearch(nameList, animationName);
         int count = nameList.size();
-        String text = String.format("Animation #%d of %d: %s",
-                index, count, animationName);
+        float duration = appInstance.animDuration();
+        String text = String.format("Animation #%d of %d: %s (%.2fs)",
+                index, count, animationName, duration);
         updateStatusLine(animationStatusLine, text);
-
-        appInstance.setAnim(animationName);
 
         String[] keywordArray = config.knownKeywords();
         String keyword = config.keyword();

@@ -164,19 +164,38 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Play the named Animation immediately (no blending).
+     * Read the duration of the Animation that's currently playing.
      *
-     * @param animationName (not null)
+     * @return the duration in seconds (&ge;0)
      */
-    void setAnim(String animationName) {
-        float blendTime = 0f;
-        animChannel.setAnim(animationName, blendTime);
+    float animDuration() {
+        float result = animChannel.getAnimMaxTime();
+        return result;
+    }
+
+    /**
+     * If the named Animation is not playing, play it immediately, from the
+     * specified start time if possible (no blending).
+     *
+     * @param name the animation name (not null)
+     * @param startTime the initial animation time (in seconds, &ge;0)
+     */
+    void setAnimation(String name, float startTime) {
+        String playing = animChannel.getAnimationName();
+        if (!name.equals(playing)) {
+            float blendTime = 0f;
+            animChannel.setAnim(name, blendTime);
+            if (startTime < animDuration()) {
+                animChannel.setTime(startTime);
+            }
+        }
     }
 
     /**
      * Add the configured Character to the scene, removing any pre-existing one.
      */
     void updateCharacter() {
+        float animTime = (animChannel == null) ? 0f : animChannel.getTime();
         unloadCharacter();
         attachCharacter();
         /*
@@ -185,7 +204,7 @@ public class BuildCharacter extends ActionApplication {
         AnimControl animControl = characterNode.getControl(AnimControl.class);
         String animationName = statusAppState.getConfig().animationName();
         animChannel = animControl.createChannel();
-        setAnim(animationName);
+        setAnimation(animationName, animTime);
         /*
          * Add a visualizer for the model's skeleton.
          */
