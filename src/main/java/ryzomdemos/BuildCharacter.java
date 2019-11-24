@@ -517,12 +517,13 @@ public class BuildCharacter extends ActionApplication {
         /*
          * Create a clean copy of the model for writing.
          */
-        Spatial cleanCopy = (Spatial) Misc.deepCopy(characterNode);
+        Node tmpParent = new Node();
+        Node cleanCopy = statusAppState.attachCharacterNode(tmpParent);
+        statusAppState.attachBodyParts(cleanCopy);
         List<Spatial> allSpatials
                 = MySpatial.listSpatials(cleanCopy, Spatial.class, null);
         for (Spatial spatial : allSpatials) {
-            spatial.setCullHint(Spatial.CullHint.Inherit);
-            spatial.setShadowMode(RenderQueue.ShadowMode.Inherit);
+            spatial.setCullHint(Spatial.CullHint.Never);
             spatial.setUserData("ryzom_alternate", null);
         }
         /*
