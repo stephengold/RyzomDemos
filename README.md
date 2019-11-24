@@ -20,7 +20,7 @@ The first time it is run,
 and generates a summary file.
 This may take 10 seconds or more; please be patient.
 On successive runs, the summary file is used instead,
-so initialization should much quicker.
+so initialization should go much quicker.
 
 You control `BuildCharacter` using hotkeys:
 
