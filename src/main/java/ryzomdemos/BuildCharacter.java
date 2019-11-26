@@ -274,7 +274,8 @@ public class BuildCharacter extends ActionApplication {
         Locators.registerFilesystem(RyzomUtil.assetRoot);
 
         statusAppState = new StatusAppState();
-        stateManager.attach(statusAppState);
+        success = stateManager.attach(statusAppState);
+        assert success;
     }
 
     /**
