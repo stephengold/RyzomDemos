@@ -149,13 +149,16 @@ public class BuildCharacter extends ActionApplication {
         Misc.setLoggingLevels(Level.WARNING);
 
         Application application = new BuildCharacter();
+
+        boolean loadDefaults = false; // use previous settings as a base
+        AppSettings settings = new AppSettings(loadDefaults);
         /*
          * Customize the window's title bar.
          */
-        AppSettings settings = new AppSettings(true);
         settings.setTitle(applicationName);
 
         settings.setGammaCorrection(true);
+        settings.setMinResolution(960, 480);
         settings.setSamples(4); // anti-aliasing
         settings.setVSync(true);
         application.setSettings(settings);
