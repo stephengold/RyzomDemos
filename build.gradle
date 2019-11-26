@@ -51,12 +51,15 @@ dependencies {
 }
 
 // cleanup tasks
-clean.dependsOn('cleanDLLs', 'cleanSOs', 'cleanWrittenAssets')
+clean.dependsOn('cleanDLLs', 'cleanSOs', 'cleanSummary', 'cleanWrittenAssets')
 task cleanDLLs(type: Delete) {
     delete fileTree(dir: '.', include: '*.dll')
 }
 task cleanSOs(type: Delete) {
     delete fileTree(dir: '.', include: '*.so')
+}
+task cleanSummary(type: Delete) {
+    delete 'ryzom-summary.bin'
 }
 task cleanWrittenAssets(type: Delete) {
     delete 'Written Assets'

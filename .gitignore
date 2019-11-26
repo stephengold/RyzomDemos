@@ -2,6 +2,7 @@
 /.nb-gradle/
 /build/
 /private/
+/ryzom-summary.bin
 /Written Assets/
 /*.dll
 /*.so
