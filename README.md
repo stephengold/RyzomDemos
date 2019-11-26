@@ -5,7 +5,7 @@ from the Ryzom Asset Repository by means of Alweth's `RyzomConverter`.
 
 The `BuildCharacter` application allows you to configure a humanoid character,
 select an animation, and see the results in real time.
-The number of possible body configurations exceeds 6 x 10^11.
+The number of possible body configurations exceeds 6 x 10^14.
 
   1. Install and convert the asset repository
      by following the suggested procedure
@@ -16,11 +16,11 @@ The number of possible body configurations exceeds 6 x 10^11.
   5. `./gradlew run`
 
 The first time it is run,
-`BuildCharacter` processes 701 exported files during initialization
+`BuildCharacter` processes 1,963 exported files during initialization
 and generates a summary file.
-This may take 10 seconds or more; please be patient.
+This may take 90 seconds or more; please be patient.
 On successive runs, the summary file is used instead,
-so initialization should go much quicker.
+so initialization should complete much more quickly.
 
 You control `BuildCharacter` using hotkeys:
 

@@ -87,13 +87,14 @@ class Status {
 
         character.setGender("m");
         character.setGroup("ca");
-        character.setGeometry(BodyPart.Arms, "fy_hom_armor01_armpad");
-        character.setGeometry(BodyPart.Torso, "fy_hom_armor01_gilet");
-        character.setGeometry(BodyPart.Face, "fy_hom_visage");
-        character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes");
-        character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01");
-        character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand");
-        character.setGeometry(BodyPart.Legs, "fy_hom_armor01_pantabottes");
+        character.setGeometry(BodyPart.Arms, "fy_hom_armor01_armpad@01x_c1");
+        character.setGeometry(BodyPart.Torso, "fy_hom_armor01_gilet@01x_c1");
+        character.setGeometry(BodyPart.Face, "fy_hom_visage@-x-");
+        character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes@01x_c1");
+        character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01@01x-");
+        character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand@01x_c1");
+        character.setGeometry(BodyPart.Legs,
+                "fy_hom_armor01_pantabottes@01x_c1");
     }
     // *************************************************************************
     // new methods exposed
