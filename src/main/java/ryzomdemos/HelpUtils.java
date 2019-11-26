@@ -173,6 +173,9 @@ class HelpUtils {
         if (result.startsWith("SIMPLEAPP_")) {
             String suffix = MyString.remainder(result, "SIMPLEAPP_");
             result = MyString.firstToLower(suffix);
+            if (result.equals("hideStats")) {
+                result = "toggle stats";
+            }
         } else if (result.startsWith("FLYCAM_")) {
             String suffix = MyString.remainder(result, "FLYCAM_");
             result = "camera " + MyString.firstToLower(suffix);
