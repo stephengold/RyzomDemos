@@ -30,9 +30,18 @@ if (!hasProperty('mainClass')) {
 }
 jar.manifest.attributes('Main-Class': mainClassName)
 
+task runDodgerGame(type: JavaExec) {
+    main 'ryzomdemos.DodgerGame'
+}
+
+task runStatistics(type: JavaExec) {
+    main 'ryzomdemos.Statistics'
+}
+
 repositories {
     //mavenLocal()
     maven { url 'https://dl.bintray.com/stephengold/jme3utilities' }
+    maven { url 'https://dl.bintray.com/stephengold/org.jmonkeyengine' } // for testdata
     jcenter()
 }
 
@@ -40,14 +49,16 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 
     // 3 libraries included solely to avoid AssetConfig warnings:
     runtimeOnly 'org.jmonkeyengine:jme3-blender:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 
-    implementation "jme3utilities:jme3-utilities-heart:4.1.0for32"
-    implementation "jme3utilities:jme3-utilities-ui:0.7.8for32"
+    implementation 'jme3utilities:jme3-utilities-heart:4.1.0for32'
+    implementation 'jme3utilities:jme3-utilities-ui:0.7.8for32'
+    implementation 'jme3utilities:Wes:0.4.5for32'
 }
 
 // cleanup tasks

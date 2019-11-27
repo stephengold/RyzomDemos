@@ -45,7 +45,33 @@ You control `BuildCharacter` using hotkeys:
 You can also drag with the LMB (left mouse button)
 to pan and/or tilt the camera.
 
-<img height="360" src="https://i.imgur.com/wVcItj0.jpg">
+<img height="360" src="https://i.imgur.com/wLikttk.png">
+
+The screenshot is derived from Ryzom Asset Repository, licensed CC-BY-SA 3.0.
+Alweth is acknowledged for authoring `RyzomConverter`
+and providing it free of charge.
+
+## DodgerGame
+
+The `DodgerGame` application plays a simple game using the exported assets.
+
+Unseen persons are shooting arrows at your avatar.
+Your goal is to avoid the arrows by strafing to the left or right.
+You earn one point for each arrow that misses your avatar.
+
+    ./gradlew runDodgerGame
+
+You control `DodgerGame` using hotkeys:
+
+ + H : show/hide the help overlay
+ + enter/G/Y : start a new game
+ + left/A/Num4 : strafe left and then return to center
+ + right/D/Num6 : strafe right and then return to center
+ + Esc : quit the application
+ + F5 : show/hide the render statistics overlay
+ + PrtSc : save a screenshot to a file
+
+<img height="360" src="https://i.imgur.com/iwmaQ8k.png">
 
 The screenshot is derived from Ryzom Asset Repository, licensed CC-BY-SA 3.0.
 Alweth is acknowledged for authoring `RyzomConverter`
@@ -58,3 +84,5 @@ from the exported assets and prints a report to `System.out`.
 
 If the `Statistics` application doesn't find a summary file,
 it should generate one.
+
+    ./gradlew runStatistics
