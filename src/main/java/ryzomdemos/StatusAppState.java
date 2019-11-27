@@ -107,7 +107,7 @@ public class StatusAppState extends SimpleAppState {
     /**
      * Instantiate an uninitialized enabled state.
      */
-    public StatusAppState() {
+    StatusAppState() {
         super(true);
     }
     // *************************************************************************
