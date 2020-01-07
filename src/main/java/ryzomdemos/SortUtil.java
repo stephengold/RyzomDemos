@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Utility methods to verify sorted arrays and lists.
+ * Utility methods to verify sorted arrays and lists. TODO use Heart library
  *
  * @author Stephen Gold sgold@sonic.net
  */
