@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2020, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@ import jme3utilities.MyCamera;
 import jme3utilities.MySkeleton;
 import jme3utilities.MySpatial;
 import jme3utilities.ui.ActionApplication;
+import jme3utilities.ui.HelpUtils;
 import jme3utilities.ui.Hotkey;
 import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
