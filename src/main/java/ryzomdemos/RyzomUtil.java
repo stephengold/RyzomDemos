@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2020, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
+import jme3utilities.math.MyArray;
 import jme3utilities.math.noise.Generator;
 
 /**
@@ -177,7 +178,7 @@ class RyzomUtil {
 
         String[] result = map.get(part);
 
-        assert SortUtil.isSorted(result);
+        assert MyArray.isSorted(result);
         assert result != null;
         return result;
     }
@@ -257,14 +258,14 @@ class RyzomUtil {
             Set<String> fNames = tmpMap.get(fKey);
             String[] fArray = new String[fNames.size()];
             fNames.toArray(fArray);
-            assert SortUtil.isSorted(fArray);
+            assert MyArray.isSorted(fArray);
             knownFemaleAssets.put(part, fArray);
 
             String mKey = "m" + part;
             Set<String> mNames = tmpMap.get(mKey);
             String[] mArray = new String[mNames.size()];
             mNames.toArray(mArray);
-            assert SortUtil.isSorted(mArray);
+            assert MyArray.isSorted(mArray);
             knownMaleAssets.put(part, mArray);
         }
 
@@ -435,7 +436,7 @@ class RyzomUtil {
         animationNames.toArray(result);
         Arrays.sort(result);
 
-        assert SortUtil.isSorted(result);
+        assert MyArray.isSorted(result);
         assert result != null;
         return result;
     }
@@ -469,7 +470,7 @@ class RyzomUtil {
                 int numKeywords = keywordSet.size();
                 String[] keywords = new String[numKeywords];
                 keywordSet.toArray(keywords);
-                assert SortUtil.isSorted(keywords);
+                assert MyArray.isSorted(keywords);
 
                 String key = groupName + genderCode;
                 knownKeywords.put(key, keywords);

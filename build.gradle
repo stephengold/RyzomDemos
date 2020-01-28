@@ -56,8 +56,8 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 
-    implementation 'jme3utilities:jme3-utilities-heart:4.3.0for32'
-    implementation 'jme3utilities:jme3-utilities-ui:0.7.10for32'
+    implementation 'jme3utilities:jme3-utilities-heart:4.4.0for32'
+    implementation 'jme3utilities:jme3-utilities-ui:0.8.0for32'
     implementation 'jme3utilities:Wes:0.4.7for32'
 }
 

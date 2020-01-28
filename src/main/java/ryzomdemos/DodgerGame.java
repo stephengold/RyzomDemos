@@ -34,7 +34,6 @@ import com.jme3.animation.Bone;
 import com.jme3.animation.LoopMode;
 import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
-import com.jme3.app.state.ScreenshotAppState;
 import com.jme3.asset.ModelKey;
 import com.jme3.font.BitmapText;
 import com.jme3.font.Rectangle;
@@ -205,14 +204,6 @@ public class DodgerGame
      */
     @Override
     public void actionInitializeApplication() {
-        /*
-         * Capture a screenshot each time KEY_SYSRQ (the PrtSc key) is pressed.
-         */
-        ScreenshotAppState screenshotAppState
-                = new ScreenshotAppState("Written Assets/", "screenshot");
-        boolean success = stateManager.attach(screenshotAppState);
-        assert success;
-
         configureMaterials();
 
         viewPort.setBackgroundColor(ColorRGBA.Black);
@@ -230,7 +221,7 @@ public class DodgerGame
         configureCamera();
 
         arrowAppState = new ArrowAppState();
-        success = stateManager.attach(arrowAppState);
+        boolean success = stateManager.attach(arrowAppState);
         assert success;
 
         scoreText = new BitmapText(guiFont, false);

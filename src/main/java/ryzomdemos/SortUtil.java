@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2020, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -53,23 +53,6 @@ final class SortUtil {
     }
     // *************************************************************************
     // new methods exposed
-
-    /**
-     * Test whether the specified array is lexicographically sorted in ascending
-     * order with no duplicates.
-     *
-     * @param array (not null, unaffected)
-     * @return true if sorted, otherwise false
-     */
-    static boolean isSorted(String[] array) {
-        int len = array.length;
-        for (int i = 0; i < len - 1; ++i) {
-            if (array[i].compareTo(array[i + 1]) >= 0) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Test whether the specified list is lexicographically sorted in ascending
