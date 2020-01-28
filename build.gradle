@@ -19,6 +19,7 @@ gradle.projectsEvaluated {
         classpath sourceSets.main.runtimeClasspath
         enableAssertions true
         //jvmArgs '-verbose:gc'
+        //jvmArgs '-Xms512m', '-Xmx512m'
         jvmArgs '-XX:+UseConcMarkSweepGC'
         //jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
     }
@@ -49,22 +50,27 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 
-    // 3 libraries included solely to avoid AssetConfig warnings:
+    // RyzomDemos doesn't use jme3-blender, jme3-jogg, or jme3-plugins
+    //  -- they are included solely to avoid warnings from AssetConfig
     runtimeOnly 'org.jmonkeyengine:jme3-blender:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 
+    // from stephengold's bintray repositories:
     implementation 'jme3utilities:jme3-utilities-heart:4.4.0for32'
     implementation 'jme3utilities:jme3-utilities-ui:0.8.0for32'
     implementation 'jme3utilities:Wes:0.4.7for32'
+    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 }
 
 // cleanup tasks
-clean.dependsOn('cleanDLLs', 'cleanSOs', 'cleanSummary', 'cleanWrittenAssets')
+clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanSOs', 'cleanSummary', 'cleanWrittenAssets')
 task cleanDLLs(type: Delete) {
     delete fileTree(dir: '.', include: '*.dll')
+}
+task cleanDyLibs(type: Delete) {
+    delete fileTree(dir: '.', include: '*.dylib')
 }
 task cleanSOs(type: Delete) {
     delete fileTree(dir: '.', include: '*.so')
