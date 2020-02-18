@@ -41,12 +41,14 @@ task runStatistics(type: JavaExec) {
 
 repositories {
     //mavenLocal()
-    maven { url 'https://dl.bintray.com/stephengold/jme3utilities' }
     maven { url 'https://dl.bintray.com/stephengold/org.jmonkeyengine' } // for testdata
     jcenter()
 }
 
 dependencies {
+    implementation 'com.github.stephengold:Heart:5.0.0for32'
+    implementation 'com.github.stephengold:jme3-utilities-ui:0.8.1for32'
+    implementation 'com.github.stephengold:Wes:0.4.8for32'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
@@ -58,9 +60,6 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 
     // from stephengold's bintray repositories:
-    implementation 'jme3utilities:jme3-utilities-heart:4.4.0for32'
-    implementation 'jme3utilities:jme3-utilities-ui:0.8.0for32'
-    implementation 'jme3utilities:Wes:0.4.7for32'
     runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 }
 
