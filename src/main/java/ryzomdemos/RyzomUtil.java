@@ -215,7 +215,7 @@ class RyzomUtil {
 
         String directoryPath = assetRoot + assetPathPrefix;
         File directory = new File(directoryPath);
-        assert directory.isDirectory();
+        assert directory.isDirectory() : directory.getAbsolutePath();
         String[] fileNames = directory.list();
         int numFiles = fileNames.length;
 
