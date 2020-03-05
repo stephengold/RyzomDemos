@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:5.0.0for32'
+    implementation 'com.github.stephengold:Heart:5.1.0for32'
     implementation 'com.github.stephengold:jme3-utilities-ui:0.8.1for32'
     implementation 'com.github.stephengold:Wes:0.4.8for32'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
