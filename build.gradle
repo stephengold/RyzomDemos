@@ -20,8 +20,8 @@ gradle.projectsEvaluated {
         enableAssertions true
         //jvmArgs '-verbose:gc'
         //jvmArgs '-Xms512m', '-Xmx512m'
-        jvmArgs '-XX:+UseConcMarkSweepGC'
-        //jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
+        //jvmArgs '-XX:+UseConcMarkSweepGC'
+        jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
     }
 }
 
@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:5.1.0for32'
+    implementation 'com.github.stephengold:Heart:5.2.0for32'
     implementation 'com.github.stephengold:jme3-utilities-ui:0.8.1for32'
     implementation 'com.github.stephengold:Wes:0.4.8for32'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
