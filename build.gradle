@@ -8,21 +8,20 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 ext.jmonkeyengineVersion = '3.2.4-stable'
 
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) { // compile-time options:
-        options.compilerArgs << '-Xdiags:verbose'
-        options.compilerArgs << '-Xlint:unchecked'
-        options.deprecation = true
-        options.encoding = 'UTF-8'
-    }
-    tasks.withType(JavaExec) { // runtime options:
-        classpath sourceSets.main.runtimeClasspath
-        enableAssertions true
-        //jvmArgs '-verbose:gc'
-        //jvmArgs '-Xms512m', '-Xmx512m'
-        //jvmArgs '-XX:+UseConcMarkSweepGC'
-        jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
-    }
+tasks.withType(JavaCompile) { // compile-time options:
+    options.compilerArgs << '-Xdiags:verbose'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec) { // runtime options:
+    classpath sourceSets.main.runtimeClasspath
+    enableAssertions true
+    //jvmArgs '-verbose:gc'
+    //jvmArgs '-Xms512m', '-Xmx512m'
+    //jvmArgs '-XX:+UseConcMarkSweepGC'
+    jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
 }
 
 mainClassName = 'ryzomdemos.BuildCharacter'
