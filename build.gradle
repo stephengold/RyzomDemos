@@ -6,6 +6,8 @@ plugins {
 description = 'build characters using Ryzom assets'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
+
+// current version of the Engine:
 ext.jmonkeyengineVersion = '3.2.4-stable'
 
 tasks.withType(JavaCompile) { // compile-time options:
