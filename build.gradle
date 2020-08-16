@@ -13,7 +13,7 @@ ext.jmonkeyengineVersion = '3.3.2-stable'
 tasks.withType(JavaCompile) { // compile-time options:
     options.compilerArgs << '-Xdiags:verbose'
     options.compilerArgs << '-Xlint:unchecked'
-    options.deprecation = true
+    //options.deprecation = true
     options.encoding = 'UTF-8'
 }
 
