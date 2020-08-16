@@ -142,7 +142,9 @@ public class DodgerGame
          * Mute the chatty loggers in certain packages.
          */
         Heart.setLoggingLevels(Level.WARNING);
-
+        /*
+         * Instantiate the application.
+         */
         Application application = new DodgerGame();
 
         boolean loadDefaults = false; // use previous settings as a base
@@ -152,15 +154,17 @@ public class DodgerGame
          */
         settings.setTitle(applicationName);
 
+        settings.setAudioRenderer(null);
         settings.setGammaCorrection(true);
         settings.setSamples(4); // anti-aliasing
         settings.setVSync(true);
         application.setSettings(settings);
-
+        /*
+         * Invoke the JME startup code,
+         * which in turn invokes actionInitializeApplication().
+         */
         application.start();
     }
-    // *************************************************************************
-    // new methods exposed
 
     /**
      * Locate the character's pelvis.
