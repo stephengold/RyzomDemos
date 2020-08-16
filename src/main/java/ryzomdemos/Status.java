@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2020, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.logging.Logger;
+import jme3utilities.MyString;
 import jme3utilities.math.MyMath;
 
 /**
@@ -231,7 +232,7 @@ class Status {
         }
 
         assert result != null;
-        assert SortUtil.isSorted(result);
+        assert MyString.isSorted(result);
         return result;
     }
 
