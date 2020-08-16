@@ -62,7 +62,6 @@ import jme3utilities.MySkeleton;
 import jme3utilities.MySpatial;
 import jme3utilities.ui.ActionApplication;
 import jme3utilities.ui.HelpUtils;
-import jme3utilities.ui.Hotkey;
 import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
 import jme3utilities.wes.AnimationEdit;
@@ -241,14 +240,14 @@ public class DodgerGame
     public void moreDefaultBindings() {
         InputMode dim = getDefaultInputMode();
 
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_C));
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_M));
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_Q));
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_S));
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_W));
-        dim.unbind(Hotkey.findKey(KeyInput.KEY_Z));
+        dim.unbind(KeyInput.KEY_C);
+        dim.unbind(KeyInput.KEY_M);
+        dim.unbind(KeyInput.KEY_Q);
+        dim.unbind(KeyInput.KEY_S);
+        dim.unbind(KeyInput.KEY_W);
+        dim.unbind(KeyInput.KEY_Z);
 
-        dim.bind("start", KeyInput.KEY_G);
+        dim.bind("start", KeyInput.KEY_G); // TODO use bind(String, int...)
         dim.bind("start", KeyInput.KEY_Y);
         dim.bind("start", KeyInput.KEY_RETURN);
 
