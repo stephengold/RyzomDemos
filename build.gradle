@@ -47,9 +47,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:5.5.0'
-    implementation 'com.github.stephengold:jme3-utilities-ui:0.8.3'
-    implementation 'com.github.stephengold:Wes:0.5.0'
+    implementation 'com.github.stephengold:Heart:6.0.0'
+    implementation 'com.github.stephengold:jme3-utilities-ui:0.9.0'
+    implementation 'com.github.stephengold:Wes:0.5.1'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
