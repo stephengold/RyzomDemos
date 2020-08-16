@@ -147,7 +147,9 @@ public class BuildCharacter extends ActionApplication {
          * Mute the chatty loggers in certain packages.
          */
         Heart.setLoggingLevels(Level.WARNING);
-
+        /*
+         * Instantiate the application.
+         */
         Application application = new BuildCharacter();
 
         boolean loadDefaults = false; // use previous settings as a base
@@ -157,12 +159,16 @@ public class BuildCharacter extends ActionApplication {
          */
         settings.setTitle(applicationName);
 
+        settings.setAudioRenderer(null);
         settings.setGammaCorrection(true);
         settings.setMinResolution(960, 480);
         settings.setSamples(4); // anti-aliasing
         settings.setVSync(true);
         application.setSettings(settings);
-
+        /*
+         * Invoke the JME startup code,
+         * which in turn invokes actionInitializeApplication().
+         */
         application.start();
     }
 
