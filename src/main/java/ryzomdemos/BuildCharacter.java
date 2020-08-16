@@ -289,23 +289,19 @@ public class BuildCharacter extends ActionApplication {
          */
         dim.bind("jumpNext value", KeyInput.KEY_NUMPAD9);
         dim.bind("jumpPrevious value", KeyInput.KEY_NUMPAD7);
-        dim.bind("next statusLine", KeyInput.KEY_DOWN);
-        dim.bind("next statusLine", KeyInput.KEY_NUMPAD2);
-        dim.bind("next value", KeyInput.KEY_EQUALS);
-        dim.bind("next value", KeyInput.KEY_NUMPAD6);
-        dim.bind("next value", KeyInput.KEY_RIGHT);
-        dim.bind("previous statusLine", KeyInput.KEY_NUMPAD8);
-        dim.bind("previous statusLine", KeyInput.KEY_UP);
-        dim.bind("previous value", KeyInput.KEY_LEFT);
-        dim.bind("previous value", KeyInput.KEY_MINUS);
-        dim.bind("previous value", KeyInput.KEY_NUMPAD4);
+        dim.bind("next statusLine", KeyInput.KEY_DOWN, KeyInput.KEY_NUMPAD2);
+        dim.bind("next value", KeyInput.KEY_EQUALS, KeyInput.KEY_NUMPAD6,
+                KeyInput.KEY_RIGHT);
+        dim.bind("previous statusLine", KeyInput.KEY_NUMPAD8, KeyInput.KEY_UP);
+        dim.bind("previous value", KeyInput.KEY_LEFT, KeyInput.KEY_MINUS,
+                KeyInput.KEY_NUMPAD4);
 
         dim.bind("randomize allParts", KeyInput.KEY_R);
         dim.bind("randomize value", KeyInput.KEY_NUMPAD5);
 
         dim.bind("save", KeyInput.KEY_COMMA);
-        dim.bind("signal orbitLeft", KeyInput.KEY_A);
-        dim.bind("signal orbitRight", KeyInput.KEY_D);
+        dim.bindSignal("orbitLeft", KeyInput.KEY_A);
+        dim.bindSignal("orbitRight", KeyInput.KEY_D);
 
         dim.bind("toggle axes", KeyInput.KEY_SEMICOLON);
         dim.bind("toggle help", KeyInput.KEY_H);
