@@ -8,7 +8,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 // current version of the Engine:
-ext.jmonkeyengineVersion = '3.3.2-stable'
+ext.jmonkeyengineVersion = '3.5.0-stable'
 
 tasks.withType(JavaCompile) { // compile-time options:
     options.compilerArgs << '-Xdiags:verbose'
@@ -46,16 +46,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:6.4.2'
-    implementation 'com.github.stephengold:jme3-utilities-ui:0.9.2'
-    implementation 'com.github.stephengold:Wes:0.6.2'
+    implementation 'com.github.stephengold:Heart:7.2.0'
+    implementation 'com.github.stephengold:jme3-utilities-ui:0.9.6'
+    implementation 'com.github.stephengold:Wes:0.6.8'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
 
-    // RyzomDemos doesn't use jme3-blender, jme3-jogg, or jme3-plugins
+    // RyzomDemos doesn't use jme3-jogg nor jme3-plugins
     //  -- they are included solely to avoid warnings from AssetConfig
-    runtimeOnly 'org.jmonkeyengine:jme3-blender:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 
