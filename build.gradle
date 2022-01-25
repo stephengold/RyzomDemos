@@ -42,7 +42,6 @@ task runStatistics(type: JavaExec) {
 
 repositories {
     //mavenLocal()
-    maven { url 'https://dl.bintray.com/stephengold/org.jmonkeyengine' } // for testdata
     mavenCentral()
 }
 
