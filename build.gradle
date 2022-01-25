@@ -33,11 +33,11 @@ if (!hasProperty('mainClass')) {
 jar.manifest.attributes('Main-Class': mainClassName)
 
 task runDodgerGame(type: JavaExec) {
-    main 'ryzomdemos.DodgerGame'
+    mainClass = 'ryzomdemos.DodgerGame'
 }
 
 task runStatistics(type: JavaExec) {
-    main 'ryzomdemos.Statistics'
+    mainClass = 'ryzomdemos.Statistics'
 }
 
 repositories {
