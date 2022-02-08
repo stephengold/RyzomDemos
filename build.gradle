@@ -4,8 +4,8 @@ plugins {
 }
 
 description = 'build characters using Ryzom assets'
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 // current version of the Engine:
 ext.jmonkeyengineVersion = '3.5.0-stable'
@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:7.2.0'
+    implementation 'com.github.stephengold:Heart:7.3.0'
     implementation 'com.github.stephengold:Acorus:0.9.8'
     implementation 'com.github.stephengold:Wes:0.6.8'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
