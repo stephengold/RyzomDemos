@@ -52,14 +52,12 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 
     // RyzomDemos doesn't use jme3-jogg nor jme3-plugins
     //  -- they are included solely to avoid warnings from AssetConfig
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
-
-    // from stephengold's bintray repositories:
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 }
 
 // cleanup tasks
