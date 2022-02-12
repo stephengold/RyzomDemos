@@ -3,7 +3,6 @@ plugins {
     id 'java'
 }
 
-description = 'build characters using Ryzom assets'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
