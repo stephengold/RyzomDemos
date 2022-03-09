@@ -9,19 +9,18 @@ targetCompatibility = JavaVersion.VERSION_1_8
 // current version of the Engine:
 ext.jmonkeyengineVersion = '3.5.0-stable'
 
-tasks.withType(JavaCompile) { // compile-time options:
+tasks.withType(JavaCompile) { // Java compile-time options:
     options.compilerArgs << '-Xdiags:verbose'
     options.compilerArgs << '-Xlint:unchecked'
-    //options.deprecation = true
+    //options.deprecation = true // to provide detailed deprecation warnings
     options.encoding = 'UTF-8'
 }
 
-tasks.withType(JavaExec) { // runtime options:
+tasks.withType(JavaExec) { // Java runtime options:
     classpath sourceSets.main.runtimeClasspath
     enableAssertions true
     //jvmArgs '-verbose:gc'
     //jvmArgs '-Xms512m', '-Xmx512m'
-    //jvmArgs '-XX:+UseConcMarkSweepGC'
     jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
 }
 
@@ -40,13 +39,13 @@ task runStatistics(type: JavaExec) {
 }
 
 repositories {
-    //mavenLocal()
+    //mavenLocal() // to find local SNAPSHOTs of libraries
     mavenCentral()
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:7.3.0'
-    implementation 'com.github.stephengold:Acorus:0.9.9'
+    implementation 'com.github.stephengold:Heart:7.4.1'
+    implementation 'com.github.stephengold:Acorus:0.9.10'
     implementation 'com.github.stephengold:Wes:0.7.1'
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
@@ -54,25 +53,27 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 
     // RyzomDemos doesn't use jme3-jogg nor jme3-plugins
-    //  -- they are included solely to avoid warnings from AssetConfig
+    //  -- they are included solely to avoid warnings from AssetConfig.
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
 }
 
-// cleanup tasks
+// cleanup tasks:
+
 clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanSOs', 'cleanSummary', 'cleanWrittenAssets')
-task cleanDLLs(type: Delete) {
+
+task cleanDLLs(type: Delete) { // extracted Windows native libraries
     delete fileTree(dir: '.', include: '*.dll')
 }
-task cleanDyLibs(type: Delete) {
+task cleanDyLibs(type: Delete) { // extracted macOSX native libraries
     delete fileTree(dir: '.', include: '*.dylib')
 }
-task cleanSOs(type: Delete) {
+task cleanSOs(type: Delete) { // extracted Linux and Android native libraries
     delete fileTree(dir: '.', include: '*.so')
 }
 task cleanSummary(type: Delete) {
     delete 'ryzom-summary.bin'
 }
-task cleanWrittenAssets(type: Delete) {
+task cleanWrittenAssets(type: Delete) { // Acorus output directory
     delete 'Written Assets'
 }
