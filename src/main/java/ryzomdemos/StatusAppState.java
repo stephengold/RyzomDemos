@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -203,7 +203,7 @@ public class StatusAppState extends SimpleAppState {
          * Add the status lines to the guiNode.
          */
         for (int i = 0; i < numStatusLines; ++i) {
-            statusLines[i] = new BitmapText(guiFont, false);
+            statusLines[i] = new BitmapText(guiFont);
             float y = cam.getHeight() - 20f * i;
             statusLines[i].setLocalTranslation(0f, y, 0f);
             guiNode.attachChild(statusLines[i]);

@@ -218,7 +218,7 @@ public class DodgerGame
         boolean success = stateManager.attach(arrowAppState);
         assert success;
 
-        scoreText = new BitmapText(guiFont, false);
+        scoreText = new BitmapText(guiFont);
         float x = cam.getWidth() - 100f;
         float y = cam.getHeight() - 10f;
         scoreText.setLocalTranslation(x, y, 0f);
