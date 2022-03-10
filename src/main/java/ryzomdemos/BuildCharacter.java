@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2020, Stephen Gold
+ Copyright (c) 2019-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@ package ryzomdemos;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.SkeletonControl;
-import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.AssetInfo;
 import com.jme3.asset.TextureKey;
@@ -80,8 +79,8 @@ import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
 
 /**
- * A JME3 application to demonstrate character construction using assets
- * exported from the Ryzom Asset Repository by Alweth's RyzomConverter.
+ * Demonstrate character construction using assets exported from the Ryzom Asset
+ * Repository by Alweth's RyzomConverter.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -140,17 +139,11 @@ public class BuildCharacter extends ActionApplication {
     /**
      * Main entry point for the BuildCharacter application.
      *
-     * @param ignored array of command-line arguments (not null)
+     * @param arguments array of command-line arguments (not null)
      */
-    public static void main(String[] ignored) {
-        /*
-         * Mute the chatty loggers in certain packages.
-         */
-        Heart.setLoggingLevels(Level.WARNING);
-        /*
-         * Instantiate the application.
-         */
-        Application application = new BuildCharacter();
+    public static void main(String[] arguments) {
+        BuildCharacter application = new BuildCharacter();
+        Heart.parseAppArgs(application, arguments);
 
         boolean loadDefaults = false; // use previous settings as a base
         AppSettings settings = new AppSettings(loadDefaults);

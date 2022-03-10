@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2020, Stephen Gold
+ Copyright (c) 2019-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@ import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.Animation;
 import com.jme3.animation.Bone;
 import com.jme3.animation.LoopMode;
-import com.jme3.app.Application;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.ModelKey;
 import com.jme3.font.BitmapText;
@@ -53,7 +52,6 @@ import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Heart;
 import jme3utilities.MyAsset;
@@ -67,8 +65,8 @@ import jme3utilities.ui.Locators;
 import jme3utilities.wes.AnimationEdit;
 
 /**
- * A JME3 game to demonstrate character animation using assets exported from the
- * Ryzom Asset Repository by Alweth's RyzomConverter.
+ * Demonstrate character animation using assets exported from the Ryzom Asset
+ * Repository by Alweth's RyzomConverter.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -135,17 +133,11 @@ public class DodgerGame
     /**
      * Main entry point for the DodgerGame application.
      *
-     * @param ignored array of command-line arguments (not null)
+     * @param arguments array of command-line arguments (not null)
      */
-    public static void main(String[] ignored) {
-        /*
-         * Mute the chatty loggers in certain packages.
-         */
-        Heart.setLoggingLevels(Level.WARNING);
-        /*
-         * Instantiate the application.
-         */
-        Application application = new DodgerGame();
+    public static void main(String[] arguments) {
+        DodgerGame application = new DodgerGame();
+        Heart.parseAppArgs(application, arguments);
 
         boolean loadDefaults = false; // use previous settings as a base
         AppSettings settings = new AppSettings(loadDefaults);
