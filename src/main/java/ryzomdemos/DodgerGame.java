@@ -147,10 +147,8 @@ public class DodgerGame
         settings.setTitle(applicationName);
 
         settings.setAudioRenderer(null);
-        settings.setGammaCorrection(true);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setSamples(4); // anti-aliasing
-        settings.setVSync(true);
         application.setSettings(settings);
         /*
          * Invoke the JME startup code,
