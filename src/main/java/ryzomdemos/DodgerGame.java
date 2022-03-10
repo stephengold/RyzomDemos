@@ -112,7 +112,7 @@ public class DodgerGame
      */
     private BitmapText scoreText;
     /**
-     * count of arrows successfuly dodged (&ge;0)
+     * count of arrows successfully dodged (&ge;0)
      */
     private int score;
     /**
@@ -148,6 +148,7 @@ public class DodgerGame
 
         settings.setAudioRenderer(null);
         settings.setGammaCorrection(true);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setSamples(4); // anti-aliasing
         settings.setVSync(true);
         application.setSettings(settings);

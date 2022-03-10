@@ -155,6 +155,7 @@ public class BuildCharacter extends ActionApplication {
         settings.setAudioRenderer(null);
         settings.setGammaCorrection(true);
         settings.setMinResolution(960, 480);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setSamples(4); // anti-aliasing
         settings.setVSync(true);
         application.setSettings(settings);
