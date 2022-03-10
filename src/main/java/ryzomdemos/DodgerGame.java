@@ -139,7 +139,7 @@ public class DodgerGame
         DodgerGame application = new DodgerGame();
         Heart.parseAppArgs(application, arguments);
 
-        boolean loadDefaults = false; // use previous settings as a base
+        boolean loadDefaults = true;
         AppSettings settings = new AppSettings(loadDefaults);
         /*
          * Customize the window's title bar.
