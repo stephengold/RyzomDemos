@@ -269,6 +269,22 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
+     * Callback invoked when the active InputMode changes.
+     *
+     * @param oldMode the old mode, or null if none
+     * @param newMode the new mode, or null if none
+     */
+    @Override
+    public void inputModeChange(InputMode oldMode, InputMode newMode) {
+        if (newMode != null) {
+            if (helpNode != null) {
+                helpNode.removeFromParent();
+            }
+            addHelp();
+        }
+    }
+
+    /**
      * Add application-specific hotkey bindings and override existing ones.
      */
     @Override
@@ -300,10 +316,6 @@ public class BuildCharacter extends ActionApplication {
         dim.bind("toggle meshes", KeyInput.KEY_M);
         dim.bind("toggle pause", KeyInput.KEY_PERIOD);
         dim.bind("toggle skeleton", KeyInput.KEY_V);
-        /*
-         * The help node can't be created until all hotkeys are bound.
-         */
-        addHelp();
     }
 
     /**

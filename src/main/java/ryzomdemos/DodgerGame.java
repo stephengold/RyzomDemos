@@ -229,6 +229,22 @@ public class DodgerGame
     }
 
     /**
+     * Callback invoked when the active InputMode changes.
+     *
+     * @param oldMode the old mode, or null if none
+     * @param newMode the new mode, or null if none
+     */
+    @Override
+    public void inputModeChange(InputMode oldMode, InputMode newMode) {
+        if (newMode != null) {
+            if (helpNode != null) {
+                helpNode.removeFromParent();
+            }
+            addHelp();
+        }
+    }
+
+    /**
      * Add application-specific hotkey bindings and override existing ones.
      */
     @Override
@@ -255,10 +271,6 @@ public class DodgerGame
         dim.bind("strafe right", KeyInput.KEY_NUMPAD6);
 
         dim.bind("toggle help", KeyInput.KEY_H);
-        /*
-         * Don't create the help node until all hotkeys are bound.
-         */
-        addHelp();
     }
 
     /**
