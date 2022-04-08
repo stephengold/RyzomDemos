@@ -58,6 +58,7 @@ import jme3utilities.MyAsset;
 import jme3utilities.MyCamera;
 import jme3utilities.MySkeleton;
 import jme3utilities.MySpatial;
+import jme3utilities.MyString;
 import jme3utilities.ui.ActionApplication;
 import jme3utilities.ui.HelpUtils;
 import jme3utilities.ui.InputMode;
@@ -144,7 +145,8 @@ public class DodgerGame
         /*
          * Customize the window's title bar.
          */
-        settings.setTitle(applicationName);
+        String title = applicationName + " " + MyString.join(arguments);
+        settings.setTitle(title);
 
         settings.setAudioRenderer(null);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);

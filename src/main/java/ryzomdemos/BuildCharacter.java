@@ -150,7 +150,8 @@ public class BuildCharacter extends ActionApplication {
         /*
          * Customize the window's title bar.
          */
-        settings.setTitle(applicationName);
+        String title = applicationName + " " + MyString.join(arguments);
+        settings.setTitle(title);
 
         settings.setAudioRenderer(null);
         settings.setMinResolution(960, 480);
