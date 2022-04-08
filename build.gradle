@@ -87,3 +87,4 @@ tasks.register('cleanSOs', Delete) { // extracted Linux and Android native libra
 }
 tasks.register('cleanSummary', Delete) {
     delete 'ryzom-summary.bin'
+}
