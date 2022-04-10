@@ -220,6 +220,8 @@ public class DodgerGame
         scoreText.setLocalTranslation(x, y, 0f);
         guiNode.attachChild(scoreText);
 
+        super.actionInitializeApplication();
+
         score = 0;
         updateScoreText();
     }

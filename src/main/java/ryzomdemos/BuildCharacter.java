@@ -257,6 +257,8 @@ public class BuildCharacter extends AbstractDemo {
         statusAppState = new StatusAppState();
         boolean success = stateManager.attach(statusAppState);
         assert success;
+
+        super.actionInitializeApplication();
     }
 
     /**
