@@ -33,7 +33,6 @@ import com.jme3.app.StatsAppState;
 import com.jme3.asset.AssetInfo;
 import com.jme3.asset.TextureKey;
 import com.jme3.export.binary.BinaryExporter;
-import com.jme3.font.Rectangle;
 import com.jme3.input.CameraInput;
 import com.jme3.input.KeyInput;
 import com.jme3.light.AmbientLight;
@@ -72,9 +71,9 @@ import jme3utilities.MyString;
 import jme3utilities.debug.AxesVisualizer;
 import jme3utilities.debug.Dumper;
 import jme3utilities.debug.SkeletonVisualizer;
+import jme3utilities.ui.AbstractDemo;
 import jme3utilities.ui.ActionApplication;
 import jme3utilities.ui.CameraOrbitAppState;
-import jme3utilities.ui.HelpUtils;
 import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
 
@@ -84,7 +83,7 @@ import jme3utilities.ui.Locators;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class BuildCharacter extends ActionApplication {
+public class BuildCharacter extends AbstractDemo {
     // *************************************************************************
     // constants and loggers
 
@@ -121,10 +120,6 @@ public class BuildCharacter extends ActionApplication {
      * main Node of the loaded character model
      */
     private Node characterNode;
-    /**
-     * hotkey help/hints overlay
-     */
-    private Node helpNode;
     /**
      * visualize the Skeleton of the loaded character model
      */
@@ -226,13 +221,8 @@ public class BuildCharacter extends ActionApplication {
         boolean showAxes = config.isVisible(Feature.Axes);
         axes.setEnabled(showAxes);
 
-        boolean showHelp = config.isVisible(Feature.Help);
-        Spatial.CullHint cullHint = showHelp ? Spatial.CullHint.Dynamic
-                : Spatial.CullHint.Always;
-        helpNode.setCullHint(cullHint);
-
         boolean showMeshes = config.isVisible(Feature.Meshes);
-        cullHint = showMeshes ? Spatial.CullHint.Dynamic
+        Spatial.CullHint cullHint = showMeshes ? Spatial.CullHint.Dynamic
                 : Spatial.CullHint.Always;
         characterNode.setCullHint(cullHint);
 
@@ -267,22 +257,6 @@ public class BuildCharacter extends ActionApplication {
         statusAppState = new StatusAppState();
         boolean success = stateManager.attach(statusAppState);
         assert success;
-    }
-
-    /**
-     * Callback invoked when the active InputMode changes.
-     *
-     * @param oldMode the old mode, or null if none
-     * @param newMode the new mode, or null if none
-     */
-    @Override
-    public void inputModeChange(InputMode oldMode, InputMode newMode) {
-        if (newMode != null) {
-            if (helpNode != null) {
-                helpNode.removeFromParent();
-            }
-            addHelp();
-        }
     }
 
     /**
@@ -415,22 +389,6 @@ public class BuildCharacter extends ActionApplication {
     }
 
     /**
-     * Attach a Node to display hotkey help/hints.
-     */
-    private void addHelp() {
-        float width = 230f;
-        float y = cam.getHeight() - 10f;
-        float x = cam.getWidth() - width - 10f;
-        float height = cam.getHeight() - 20f;
-        Rectangle bounds = new Rectangle(x, y, width, height);
-
-        InputMode dim = getDefaultInputMode();
-        float space = 20f;
-        helpNode = HelpUtils.buildNode(dim, bounds, guiFont, space);
-        guiNode.attachChild(helpNode);
-    }
-
-    /**
      * Add lighting and shadows to the scene.
      */
     private void addLighting() {
@@ -541,14 +499,6 @@ public class BuildCharacter extends ActionApplication {
 
         writeJ3O(cleanCopy, j3oAssetPath);
         writeTextures(cleanCopy);
-    }
-
-    /**
-     * Toggle the Animation: paused/running.
-     */
-    private void togglePause() {
-        float newSpeed = (speed > 1e-12f) ? 1e-12f : 1f;
-        setSpeed(newSpeed);
     }
 
     /**

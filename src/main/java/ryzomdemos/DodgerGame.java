@@ -35,7 +35,6 @@ import com.jme3.animation.LoopMode;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.ModelKey;
 import com.jme3.font.BitmapText;
-import com.jme3.font.Rectangle;
 import com.jme3.input.KeyInput;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -59,8 +58,7 @@ import jme3utilities.MyCamera;
 import jme3utilities.MySkeleton;
 import jme3utilities.MySpatial;
 import jme3utilities.MyString;
-import jme3utilities.ui.ActionApplication;
-import jme3utilities.ui.HelpUtils;
+import jme3utilities.ui.AbstractDemo;
 import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
 import jme3utilities.wes.AnimationEdit;
@@ -72,7 +70,7 @@ import jme3utilities.wes.AnimationEdit;
  * @author Stephen Gold sgold@sonic.net
  */
 public class DodgerGame
-        extends ActionApplication
+        extends AbstractDemo
         implements AnimEventListener {
     // *************************************************************************
     // constants and loggers
@@ -124,10 +122,6 @@ public class DodgerGame
      * main Node of the loaded character model
      */
     private Node characterNode;
-    /**
-     * hotkey help/hints overlay
-     */
-    private Node helpNode;
     // *************************************************************************
     // new methods exposed
 
@@ -228,22 +222,6 @@ public class DodgerGame
 
         score = 0;
         updateScoreText();
-    }
-
-    /**
-     * Callback invoked when the active InputMode changes.
-     *
-     * @param oldMode the old mode, or null if none
-     * @param newMode the new mode, or null if none
-     */
-    @Override
-    public void inputModeChange(InputMode oldMode, InputMode newMode) {
-        if (newMode != null) {
-            if (helpNode != null) {
-                helpNode.removeFromParent();
-            }
-            addHelp();
-        }
     }
 
     /**
@@ -372,22 +350,6 @@ public class DodgerGame
         geometry.move(0f, -halfExtent, 0f);
         geometry.setMaterial(grassMaterial);
         geometry.setShadowMode(RenderQueue.ShadowMode.Receive);
-    }
-
-    /**
-     * Attach a Node to display hotkey help/hints.
-     */
-    private void addHelp() {
-        float y = 70f;
-        float x = 210f;
-        float width = cam.getWidth() - x - 10f;
-        float height = y - 10f;
-        Rectangle bounds = new Rectangle(x, y, width, height);
-
-        InputMode dim = getDefaultInputMode();
-        float space = 20f;
-        helpNode = HelpUtils.buildNode(dim, bounds, guiFont, space);
-        guiNode.attachChild(helpNode);
     }
 
     /**
@@ -532,17 +494,6 @@ public class DodgerGame
         if (animChannel.getAnimationName().equals(idleAnimation)) {
             float blendTime = 0f;
             animChannel.setAnim(animationName, blendTime);
-        }
-    }
-
-    /**
-     * Toggle visibility of the helpNode.
-     */
-    private void toggleHelp() {
-        if (helpNode.getCullHint() == Spatial.CullHint.Always) {
-            helpNode.setCullHint(Spatial.CullHint.Never);
-        } else {
-            helpNode.setCullHint(Spatial.CullHint.Always);
         }
     }
 
