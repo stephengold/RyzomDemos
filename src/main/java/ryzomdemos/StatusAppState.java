@@ -163,7 +163,7 @@ public class StatusAppState extends SimpleAppState {
         return config;
     }
     // *************************************************************************
-    // ActionAppState methods
+    // SimpleAppState methods
 
     /**
      * Clean up this AppState during the first update after it gets detached.

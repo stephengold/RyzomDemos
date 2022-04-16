@@ -114,7 +114,7 @@ public class ArrowAppState extends SimpleAppState {
         arrowGeometry.setLocalTranslation(new Vector3f(0f, -0.5f, -5f));
     }
     // *************************************************************************
-    // ActionAppState methods
+    // SimpleAppState methods
 
     /**
      * Clean up this AppState during the first update after it gets detached.

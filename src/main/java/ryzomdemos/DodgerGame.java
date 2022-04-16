@@ -58,7 +58,7 @@ import jme3utilities.MyCamera;
 import jme3utilities.MySkeleton;
 import jme3utilities.MySpatial;
 import jme3utilities.MyString;
-import jme3utilities.ui.AbstractDemo;
+import jme3utilities.ui.AcorusDemo;
 import jme3utilities.ui.InputMode;
 import jme3utilities.ui.Locators;
 import jme3utilities.wes.AnimationEdit;
@@ -70,7 +70,7 @@ import jme3utilities.wes.AnimationEdit;
  * @author Stephen Gold sgold@sonic.net
  */
 public class DodgerGame
-        extends AbstractDemo
+        extends AcorusDemo
         implements AnimEventListener {
     // *************************************************************************
     // constants and loggers
@@ -148,7 +148,7 @@ public class DodgerGame
         application.setSettings(settings);
         /*
          * Invoke the JME startup code,
-         * which in turn invokes actionInitializeApplication().
+         * which in turn invokes acorusInit().
          */
         application.start();
     }
@@ -187,13 +187,13 @@ public class DodgerGame
         updateScoreText();
     }
     // *************************************************************************
-    // ActionApplication methods
+    // AcorusDemo methods
 
     /**
      * Initialize this Application.
      */
     @Override
-    public void actionInitializeApplication() {
+    public void acorusInit() {
         configureMaterials();
 
         viewPort.setBackgroundColor(ColorRGBA.Black);
@@ -220,7 +220,7 @@ public class DodgerGame
         scoreText.setLocalTranslation(x, y, 0f);
         guiNode.attachChild(scoreText);
 
-        super.actionInitializeApplication();
+        super.acorusInit();
 
         score = 0;
         updateScoreText();

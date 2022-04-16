@@ -71,7 +71,7 @@ import jme3utilities.MyString;
 import jme3utilities.debug.AxesVisualizer;
 import jme3utilities.debug.Dumper;
 import jme3utilities.debug.SkeletonVisualizer;
-import jme3utilities.ui.AbstractDemo;
+import jme3utilities.ui.AcorusDemo;
 import jme3utilities.ui.ActionApplication;
 import jme3utilities.ui.CameraOrbitAppState;
 import jme3utilities.ui.InputMode;
@@ -83,7 +83,7 @@ import jme3utilities.ui.Locators;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class BuildCharacter extends AbstractDemo {
+public class BuildCharacter extends AcorusDemo {
     // *************************************************************************
     // constants and loggers
 
@@ -155,7 +155,7 @@ public class BuildCharacter extends AbstractDemo {
         application.setSettings(settings);
         /*
          * Invoke the JME startup code,
-         * which in turn invokes actionInitializeApplication().
+         * which in turn invokes acorusInit().
          */
         application.start();
     }
@@ -230,13 +230,13 @@ public class BuildCharacter extends AbstractDemo {
         sv.setEnabled(showSkeleton);
     }
     // *************************************************************************
-    // ActionApplication methods
+    // AcorusDemo methods
 
     /**
      * Initialize this Application.
      */
     @Override
-    public void actionInitializeApplication() {
+    public void acorusInit() {
         configureCamera();
         configureDumper();
         configureMaterials();
@@ -258,7 +258,7 @@ public class BuildCharacter extends AbstractDemo {
         boolean success = stateManager.attach(statusAppState);
         assert success;
 
-        super.actionInitializeApplication();
+        super.acorusInit();
     }
 
     /**
