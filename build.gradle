@@ -47,9 +47,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:7.6.0'
-    implementation 'com.github.stephengold:Acorus:0.9.14'
-    implementation 'com.github.stephengold:Wes:0.7.1'
+    implementation 'com.github.stephengold:Heart:8.0.0'
+    implementation 'com.github.stephengold:Acorus:0.9.16'
+    implementation 'com.github.stephengold:Wes:0.7.2'
     implementation 'org.jmonkeyengine:jme3-core:' + jme3Version
     implementation 'org.jmonkeyengine:jme3-desktop:' + jme3Version
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jme3Version
