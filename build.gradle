@@ -48,7 +48,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.stephengold:Heart:8.2.0'
-    implementation 'com.github.stephengold:Acorus:0.9.16'
+    implementation 'com.github.stephengold:Acorus:0.9.17'
     implementation 'com.github.stephengold:Wes:0.7.2'
     implementation 'org.jmonkeyengine:jme3-core:' + jme3Version
     implementation 'org.jmonkeyengine:jme3-desktop:' + jme3Version
