@@ -71,16 +71,13 @@ tasks.register('runStatistics', JavaExec) {
 
 // cleanup tasks:
 
-clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanSandbox', 'cleanSOs', 'cleanSummary')
+clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanSOs', 'cleanSummary')
 
 tasks.register('cleanDLLs', Delete) { // extracted Windows native libraries
     delete fileTree(dir: '.', include: '*.dll')
 }
 tasks.register('cleanDyLibs', Delete) { // extracted macOS native libraries
     delete fileTree(dir: '.', include: '*.dylib')
-}
-tasks.register('cleanSandbox', Delete) { // Acorus sandbox
-    delete 'Written Assets'
 }
 tasks.register('cleanSOs', Delete) { // extracted Linux and Android native libraries
     delete fileTree(dir: '.', include: '*.so')
