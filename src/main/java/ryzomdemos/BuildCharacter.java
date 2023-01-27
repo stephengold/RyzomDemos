@@ -150,6 +150,15 @@ public class BuildCharacter extends AcorusDemo {
         settings.setTitle(title); // Customize the window's title bar.
         application.setSettings(settings);
         /*
+         * Designate a sandbox directory.
+         * This must done *prior to* initialization.
+         */
+        try {
+            ActionApplication.designateSandbox("./Written Assets");
+        } catch (IOException exception) {
+            // do nothing
+        }
+        /*
          * Invoke the JME startup code,
          * which in turn invokes acorusInit().
          */
