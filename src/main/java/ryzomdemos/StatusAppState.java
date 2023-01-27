@@ -187,7 +187,7 @@ public class StatusAppState extends SimpleAppState {
     public void initialize(AppStateManager sm, Application app) {
         super.initialize(sm, app);
 
-        appInstance = (BuildCharacter) app;
+        this.appInstance = (BuildCharacter) app;
         BitmapFont guiFont
                 = assetManager.loadFont("Interface/Fonts/Default.fnt");
 
@@ -199,7 +199,7 @@ public class StatusAppState extends SimpleAppState {
 
         // Add the status lines to the guiNode.
         for (int i = 0; i < numStatusLines; ++i) {
-            statusLines[i] = new BitmapText(guiFont);
+            this.statusLines[i] = new BitmapText(guiFont);
             float y = cam.getHeight() - 20f * i;
             statusLines[i].setLocalTranslation(0f, y, 0f);
             guiNode.attachChild(statusLines[i]);
@@ -244,7 +244,7 @@ public class StatusAppState extends SimpleAppState {
         updateStatusLine(keywordStatusLine, text);
 
         if (actual == null) {
-            actual = new Status();
+            this.actual = new Status();
         }
         actual.copy(config);
     }
