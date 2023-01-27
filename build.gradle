@@ -33,11 +33,9 @@ tasks.withType(JavaExec) { // Java runtime options:
     jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
 }
 
-mainClassName = 'ryzomdemos.BuildCharacter'
-if (!hasProperty('mainClass')) {
-    ext.mainClass = mainClassName
+application {
+    mainClass = 'ryzomdemos.BuildCharacter'
 }
-jar.manifest.attributes('Main-Class': mainClassName)
 
 repositories {
     //mavenLocal() // to find local SNAPSHOTs of libraries
