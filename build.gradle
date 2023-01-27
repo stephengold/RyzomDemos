@@ -4,9 +4,7 @@ plugins {
     id 'application'
 }
 
-ext { // current versions of libraries:
-    jme3Version = '3.5.2-stable'
-}
+ext.jme3Version = '3.5.2-stable' // current version of JMonkeyEngine
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -52,8 +50,8 @@ dependencies {
     implementation 'com.github.stephengold:Wes:0.7.2'
     implementation 'org.jmonkeyengine:jme3-core:' + jme3Version
     implementation 'org.jmonkeyengine:jme3-desktop:' + jme3Version
-    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jme3Version
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
+    runtimeOnly    'org.jmonkeyengine:jme3-lwjgl3:' + jme3Version
+    runtimeOnly    'org.jmonkeyengine:jme3-testdata:3.1.0-stable'
 
     // RyzomDemos doesn't use jme3-jogg nor jme3-plugins
     //  -- they are included solely to avoid warnings from AssetConfig.
