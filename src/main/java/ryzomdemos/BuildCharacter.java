@@ -146,6 +146,7 @@ public class BuildCharacter extends AcorusDemo {
         settings.setAudioRenderer(null);
         settings.setMinResolution(960, 480);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
+        settings.setResizable(true);
         settings.setSamples(4); // anti-aliasing
         settings.setTitle(title); // Customize the window's title bar.
         application.setSettings(settings);
@@ -362,6 +363,18 @@ public class BuildCharacter extends AcorusDemo {
         }
 
         super.onAction(actionString, ongoing, tpf);
+    }
+
+    /**
+     * Update the GUI layout after the ViewPort gets resized.
+     *
+     * @param newWidth the new width of the ViewPort (in pixels, &gt;0)
+     * @param newHeight the new height of the ViewPort (in pixels, &gt;0)
+     */
+    @Override
+    public void onViewPortResize(int newWidth, int newHeight) {
+        super.onViewPortResize(newWidth, newHeight);
+        statusAppState.onViewPortResize(newWidth, newHeight);
     }
     // *************************************************************************
     // private methods

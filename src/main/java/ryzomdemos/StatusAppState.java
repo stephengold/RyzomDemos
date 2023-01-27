@@ -248,6 +248,21 @@ public class StatusAppState extends SimpleAppState {
         }
         actual.copy(config);
     }
+
+    /**
+     * Update the GUI layout after the ViewPort gets resized.
+     *
+     * @param newWidth the new width of the ViewPort (in pixels, &gt;0)
+     * @param newHeight the new height of the ViewPort (in pixels, &gt;0)
+     */
+    void onViewPortResize(int newWidth, int newHeight) {
+        for (int i = 0; i < numStatusLines; ++i) {
+            float y = newHeight - 20f * i;
+            if (statusLines[i] != null) {
+                statusLines[i].setLocalTranslation(0f, y, 0f);
+            }
+        }
+    }
     // *************************************************************************
     // private methods
 
