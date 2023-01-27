@@ -189,7 +189,7 @@ public class DodgerGame
     // AcorusDemo methods
 
     /**
-     * Initialize this Application.
+     * Initialize this application.
      */
     @Override
     public void acorusInit() {
@@ -258,7 +258,7 @@ public class DodgerGame
      *
      * @param actionString textual description of the action (not null)
      * @param ongoing true if the action is ongoing, otherwise false
-     * @param tpf time interval between frames (in seconds, &ge;0)
+     * @param tpf the time interval between frames (in seconds, &ge;0)
      */
     @Override
     public void onAction(String actionString, boolean ongoing, float tpf) {
@@ -353,7 +353,7 @@ public class DodgerGame
     }
 
     /**
-     * Add lighting and shadows to the scene.
+     * Add lighting and shadows to the scene during startup
      */
     private void addLighting() {
         ColorRGBA ambientColor = new ColorRGBA(0.7f, 0.7f, 0.7f, 1f);
@@ -442,7 +442,7 @@ public class DodgerGame
     }
 
     /**
-     * Configure the Camera during startup.
+     * Configure the camera during startup.
      */
     private void configureCamera() {
         flyCam.setEnabled(false);
