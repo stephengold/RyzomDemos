@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2020, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -94,8 +94,8 @@ class Status {
         character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes@01x_c1");
         character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01@01x-");
         character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand@01x_c1");
-        character.setGeometry(BodyPart.Legs,
-                "fy_hom_armor01_pantabottes@01x_c1");
+        character.setGeometry(
+                BodyPart.Legs, "fy_hom_armor01_pantabottes@01x_c1");
     }
     // *************************************************************************
     // new methods exposed

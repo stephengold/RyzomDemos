@@ -143,8 +143,8 @@ public class Statistics {
                 String[] nameArray
                         = RyzomUtil.knownAnimations(groupName, genderCode);
 
-                out.printf("For the %d %s_ho%s animations:%n", nameArray.length,
-                        groupName, genderCode);
+                out.printf("For the %d %s_ho%s animations:%n",
+                        nameArray.length, groupName, genderCode);
                 reportNameStatistics(keywordArray, nameArray);
                 reportKeywordStatistics(keywordArray, nameArray);
             }
@@ -153,8 +153,8 @@ public class Statistics {
     // *************************************************************************
     // private methods
 
-    private static void reportNameStatistics(String[] keywordArray,
-            String[] nameArray) {
+    private static void reportNameStatistics(
+            String[] keywordArray, String[] nameArray) {
         String mostMatchedName = null;
         int mostKeywordMatches = -1;
         Set<String> unmatchedNames = new TreeSet<>();
@@ -191,8 +191,8 @@ public class Statistics {
         out.printf(" which matches %d keywords.%n", mostKeywordMatches);
     }
 
-    private static void reportKeywordStatistics(String[] keywordArray,
-            String[] nameArray) {
+    private static void reportKeywordStatistics(
+            String[] keywordArray, String[] nameArray) {
         String mostMatchedKeyword = null;
         int mostNameMatches = -1;
 

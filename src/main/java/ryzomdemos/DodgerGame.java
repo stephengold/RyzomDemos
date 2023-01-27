@@ -295,8 +295,8 @@ public class DodgerGame
      * @param name the name of the Animation that completed
      */
     @Override
-    public void onAnimCycleDone(AnimControl control, AnimChannel channel,
-            String name) {
+    public void onAnimCycleDone(
+            AnimControl control, AnimChannel channel, String name) {
         float blendTime = 0f;
         switch (name) {
             case deathAnimation:
@@ -331,8 +331,8 @@ public class DodgerGame
      * @param name the name of the Animation
      */
     @Override
-    public void onAnimChange(AnimControl control, AnimChannel channel,
-            String name) {
+    public void onAnimChange(
+            AnimControl control, AnimChannel channel, String name) {
         // do nothing
     }
     // *************************************************************************
@@ -384,8 +384,8 @@ public class DodgerGame
         character.setGeometry(BodyPart.Feet, "fy_hom_armor01_bottes@01x_c1");
         character.setGeometry(BodyPart.Head, "fy_hom_cheveux_basic01@01x-");
         character.setGeometry(BodyPart.Hands, "fy_hom_armor01_hand@01x_c1");
-        character.setGeometry(BodyPart.Legs,
-                "fy_hom_armor01_pantabottes@01x_c1");
+        character.setGeometry(
+                BodyPart.Legs, "fy_hom_armor01_pantabottes@01x_c1");
         /*
          * Load the character node
          * (including a SkeletonControl and an AnimControl but no geometries)

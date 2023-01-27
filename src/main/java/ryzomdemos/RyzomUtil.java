@@ -343,8 +343,8 @@ class RyzomUtil {
      * @param assetManager (not null)
      * @return an enum value (not null)
      */
-    private static BodyPart bodyPart(String fileName,
-            AssetManager assetManager) {
+    private static BodyPart bodyPart(
+            String fileName, AssetManager assetManager) {
         assert fileName.endsWith(".j3o");
 
         String assetPath = assetPathPrefix + fileName;
@@ -417,8 +417,8 @@ class RyzomUtil {
      * @param assetManager (not null)
      * @return a new vector of names in lexicographic order
      */
-    private static String[] listAnimations(String fileName,
-            AssetManager assetManager) {
+    private static String[] listAnimations(
+            String fileName, AssetManager assetManager) {
         String genderCode = fileName.substring(16, 17);
         String groupName = fileName.substring(11, 13);
         assert String.format("animations_%s_ho%s.j3o",
@@ -612,9 +612,8 @@ class RyzomUtil {
      * unaffected)
      * @throws IOException
      */
-    private static void writeStringArray(OutputStream outputStream,
-            String[] array)
-            throws IOException {
+    private static void writeStringArray(
+            OutputStream outputStream, String[] array) throws IOException {
         int length = array.length;
         ByteUtils.writeInt(outputStream, length);
         for (int arrayIndex = 0; arrayIndex < length; ++arrayIndex) {
