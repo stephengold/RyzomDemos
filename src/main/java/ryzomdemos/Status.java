@@ -82,7 +82,6 @@ class Status {
      */
     Status() {
         visibilityFlags.put(Feature.Axes, false);
-        visibilityFlags.put(Feature.Help, true);
         visibilityFlags.put(Feature.Meshes, true);
         visibilityFlags.put(Feature.Skeleton, false);
 

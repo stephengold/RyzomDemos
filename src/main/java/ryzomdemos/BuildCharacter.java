@@ -338,9 +338,6 @@ public class BuildCharacter extends AcorusDemo {
                 case "toggle axes":
                     config.toggleVisibility(Feature.Axes);
                     return;
-                case "toggle help":
-                    config.toggleVisibility(Feature.Help);
-                    return;
                 case "toggle meshes":
                     config.toggleVisibility(Feature.Meshes);
                     return;

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -36,10 +36,6 @@ enum Feature {
      * world axes
      */
     Axes,
-    /**
-     * hotkey help/hint overlay
-     */
-    Help,
     /**
      * character's meshes
      */
