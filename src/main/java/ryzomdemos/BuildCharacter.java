@@ -137,21 +137,17 @@ public class BuildCharacter extends AcorusDemo {
      * @param arguments array of command-line arguments (not null)
      */
     public static void main(String[] arguments) {
+        String title = applicationName + " " + MyString.join(arguments);
         BuildCharacter application = new BuildCharacter();
         Heart.parseAppArgs(application, arguments);
 
         boolean loadDefaults = true;
         AppSettings settings = new AppSettings(loadDefaults);
-        /*
-         * Customize the window's title bar.
-         */
-        String title = applicationName + " " + MyString.join(arguments);
-        settings.setTitle(title);
-
         settings.setAudioRenderer(null);
         settings.setMinResolution(960, 480);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setSamples(4); // anti-aliasing
+        settings.setTitle(title); // Customize the window's title bar.
         application.setSettings(settings);
         /*
          * Invoke the JME startup code,
@@ -285,7 +281,7 @@ public class BuildCharacter extends AcorusDemo {
         dim.bindSignal("orbitRight", KeyInput.KEY_D);
 
         dim.bind("toggle axes", KeyInput.KEY_SEMICOLON);
-        dim.bind("toggle help", KeyInput.KEY_H);
+        dim.bind(asToggleHelp, KeyInput.KEY_H);
         dim.bind("toggle meshes", KeyInput.KEY_M);
         dim.bind("toggle pause", KeyInput.KEY_PERIOD);
         dim.bind("toggle skeleton", KeyInput.KEY_V);
@@ -354,6 +350,8 @@ public class BuildCharacter extends AcorusDemo {
                 case "toggle skeleton":
                     config.toggleVisibility(Feature.Skeleton);
                     return;
+
+                default:
             }
         }
 
