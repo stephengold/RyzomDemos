@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2022, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -121,9 +121,8 @@ public class StatusAppState extends SimpleAppState {
     void attachBodyParts(Node parentNode) {
         Character character = config.getCharacter();
         character.adjustAssetsForGender();
-        /*
-         * Load the selected body-part geometries and attach them to the parent.
-         */
+
+        // Load the selected body-part geometries and attach them to the parent.
         for (BodyPart part : BodyPart.values()) {
             if (character.includes(part)) {
                 ModelKey assetKey = character.makeGeometryAssetKey(part);
@@ -172,9 +171,7 @@ public class StatusAppState extends SimpleAppState {
     @Override
     public void cleanup() {
         super.cleanup();
-        /*
-         * Remove the status lines from the guiNode.
-         */
+        // Remove the status lines from the guiNode.
         for (int i = 0; i < numStatusLines; ++i) {
             statusLines[i].removeFromParent();
         }
@@ -199,9 +196,8 @@ public class StatusAppState extends SimpleAppState {
             RyzomUtil.preloadAssets(assetManager);
             RyzomUtil.writeMaps();
         }
-        /*
-         * Add the status lines to the guiNode.
-         */
+
+        // Add the status lines to the guiNode.
         for (int i = 0; i < numStatusLines; ++i) {
             statusLines[i] = new BitmapText(guiFont);
             float y = cam.getHeight() - 20f * i;
@@ -265,9 +261,8 @@ public class StatusAppState extends SimpleAppState {
                 && actual.selectedField() == config.selectedField()) {
             return; // unchanged
         }
-        /*
-         * Update body-dependent status lines.
-         */
+
+        // Update body-dependent status lines.
         String genderName = character.isFemale() ? "female" : "male";
         int index = character.isFemale() ? 1 : 2;
         String text = String.format("Gender #%d of 2: %s", index, genderName);

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2022, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -195,16 +195,14 @@ public class BuildCharacter extends AcorusDemo {
         float animTime = (animChannel == null) ? 0f : animChannel.getTime();
         unloadCharacter();
         attachCharacter();
-        /*
-         * Update the selected Animation and play it.
-         */
+
+        // Update the selected Animation and play it.
         AnimControl animControl = characterNode.getControl(AnimControl.class);
         String animationName = statusAppState.getConfig().animationName();
         animChannel = animControl.createChannel();
         setAnimation(animationName, animTime);
-        /*
-         * Add a visualizer for the model's skeleton.
-         */
+
+        // Add a visualizer for the model's skeleton.
         SkeletonControl skeletonControl
                 = characterNode.getControl(SkeletonControl.class);
         sv = new SkeletonVisualizer(assetManager, skeletonControl);
@@ -244,9 +242,8 @@ public class BuildCharacter extends AcorusDemo {
         ColorRGBA bgColor = new ColorRGBA(0.2f, 0.2f, 1f, 1f);
         viewPort.setBackgroundColor(bgColor);
         addLighting();
-        /*
-         * Hide the render statistics overlay.
-         */
+
+        // Hide the render statistics overlay.
         stateManager.getState(StatsAppState.class).toggleStats();
 
         addAxes();
@@ -269,9 +266,8 @@ public class BuildCharacter extends AcorusDemo {
         InputMode dim = getDefaultInputMode();
 
         dim.bind("dump scenes", KeyInput.KEY_P);
-        /*
-         * navigate the status overlay
-         */
+
+        // navigate the status overlay
         dim.bind("jumpNext value", KeyInput.KEY_NUMPAD9);
         dim.bind("jumpPrevious value", KeyInput.KEY_NUMPAD7);
         dim.bind("next statusLine", KeyInput.KEY_DOWN, KeyInput.KEY_NUMPAD2);
@@ -419,9 +415,8 @@ public class BuildCharacter extends AcorusDemo {
          * and attach it to the scene graph.
          */
         characterNode = statusAppState.attachCharacterNode(rootNode);
-        /*
-         * Attach body parts to the character node.
-         */
+
+        // Attach body parts to the character node.
         statusAppState.attachBodyParts(characterNode);
         /*
          * Disable culling and configure the model to cast shadows,
@@ -477,9 +472,7 @@ public class BuildCharacter extends AcorusDemo {
      * Save the loaded character model and its textures to the filesystem.
      */
     private void save() {
-        /*
-         * Create a clean copy of the model for writing.
-         */
+        // Create a clean copy of the model for writing.
         Node tmpParent = new Node();
         Node cleanCopy = statusAppState.attachCharacterNode(tmpParent);
         statusAppState.attachBodyParts(cleanCopy);
@@ -489,9 +482,8 @@ public class BuildCharacter extends AcorusDemo {
             spatial.setCullHint(Spatial.CullHint.Never);
             spatial.setUserData("ryzom_alternate", null);
         }
-        /*
-         * Use the time of day to construct an asset path for the J3O.
-         */
+
+        // Use the time of day to construct an asset path for the J3O.
         Calendar rightNow = Calendar.getInstance();
         int hours = rightNow.get(Calendar.HOUR_OF_DAY);
         int minutes = rightNow.get(Calendar.MINUTE);
@@ -538,9 +530,8 @@ public class BuildCharacter extends AcorusDemo {
 
         String outputFilePath = ActionApplication.filePath(assetPath);
         File outputFile = new File(outputFilePath);
-        /*
-         * Create the parent folder.
-         */
+
+        // Create the parent folder.
         File parent = outputFile.getParentFile();
         if (parent != null && !parent.exists()) {
             boolean success = parent.mkdirs();
@@ -599,9 +590,7 @@ public class BuildCharacter extends AcorusDemo {
      * @param cgmRoot the root node of the model (not null, unaffected)
      */
     private void writeTextures(Spatial cgmRoot) {
-        /*
-         * Collect all unique 2-D textures used in the model.
-         */
+        // Collect all unique 2-D textures used in the model.
         Set<TextureKey> textureKeys = new HashSet<>();
         for (Material materials : MySpatial.listMaterials(cgmRoot, null)) {
             for (MatParam matParam : materials.getParams()) {
@@ -612,9 +601,8 @@ public class BuildCharacter extends AcorusDemo {
                 }
             }
         }
-        /*
-         * Write each texture to a JPG file.
-         */
+
+        // Write each texture to a JPG file.
         for (TextureKey textureKey : textureKeys) {
             writeImage(textureKey);
         }

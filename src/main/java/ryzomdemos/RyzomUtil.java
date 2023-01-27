@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2020, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -452,15 +452,11 @@ class RyzomUtil {
                 for (String name : nameArray) {
                     String[] words = name.split("_");
                     for (String word : words) {
-                        /*
-                         * trim trailing digits
-                         */
+                        // trim trailing digits
                         while (word.matches("^.+[0-9]$")) {
                             word = word.substring(0, word.length() - 1);
                         }
-                        /*
-                         * exclude short words and ones that appear very often
-                         */
+                        // exclude short words and ones that appear very often
                         if (word.length() >= 3 && !word.equals("end")
                                 && !word.equals("hof") && !word.equals("hom")) {
                             keywordSet.add(word);

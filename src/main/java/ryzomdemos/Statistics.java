@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -89,9 +89,8 @@ public class Statistics {
 
         out = System.out;
         out.println();
-        /*
-         * Statistics on geometries assets.
-         */
+
+        // Output statistics on geometries assets.
         long totalCombos = 0L;
         for (String genderCode : RyzomUtil.genderCodeArray) {
             long numCombosForGender = 1L;
@@ -110,9 +109,8 @@ public class Statistics {
         }
         out.printf("... for a total of %d (%e) character bodies.%n%n",
                 totalCombos, (float) totalCombos);
-        /*
-         * Statistics on animation names and animation keywords.
-         */
+
+        // Output statistics on animation names and animation keywords.
         Set<String> allAnimationNames = new TreeSet<>();
         Set<String> allAnimationKeywords = new TreeSet<>();
         for (String groupName : RyzomUtil.groupNameArray) {
@@ -136,9 +134,8 @@ public class Statistics {
         }
         out.printf("Overall, %d distinct names and %d distinct keywords.%n%n",
                 allAnimationNames.size(), allAnimationKeywords.size());
-        /*
-         * Count how many animation keywords match each animation name.
-         */
+
+        // Count how many animation keywords match each animation name.
         for (String groupName : RyzomUtil.groupNameArray) {
             for (String genderCode : RyzomUtil.genderCodeArray) {
                 String[] keywordArray

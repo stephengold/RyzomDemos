@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -94,9 +94,8 @@ class Character implements Cloneable {
         String result = name;
         boolean isFemale = isFemale();
         boolean isMale = isMale();
-        /*
-         * Make at most one substitution.
-         */
+
+        // Make at most one substitution.
         if (isFemale && result.contains("_hom_")) {
             result = result.replace("_hom_", "_hof_");
         } else if (isMale && result.contains("_hof_")) {

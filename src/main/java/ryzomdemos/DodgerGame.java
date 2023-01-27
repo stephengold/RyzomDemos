@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2022, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -136,9 +136,8 @@ public class DodgerGame
 
         boolean loadDefaults = true;
         AppSettings settings = new AppSettings(loadDefaults);
-        /*
-         * Customize the window's title bar.
-         */
+
+        // Customize the window's title bar.
         String title = applicationName + " " + MyString.join(arguments);
         settings.setTitle(title);
 
@@ -198,9 +197,8 @@ public class DodgerGame
 
         viewPort.setBackgroundColor(ColorRGBA.Black);
         addLighting();
-        /*
-         * Initially hide the render-statistics overlay.
-         */
+
+        // Initially hide the render-statistics overlay.
         stateManager.getState(StatsAppState.class).toggleStats();
 
         addBox();
@@ -396,9 +394,8 @@ public class DodgerGame
         ModelKey assetKey = character.makeAnimationAssetKey();
         characterNode = (Node) assetManager.loadAsset(assetKey);
         rootNode.attachChild(characterNode);
-        /*
-         * Add time-reversed versions of the strafe animations.
-         */
+
+        // Add time-reversed versions of the strafe animations.
         AnimControl animControl = characterNode.getControl(AnimControl.class);
         for (String animationName : new String[]{
             strafeLeftAnimation,
@@ -410,9 +407,8 @@ public class DodgerGame
                     = AnimationEdit.reverseAnimation(forward, reverseName);
             animControl.addAnim(reverse);
         }
-        /*
-         * Attach body parts to the character node.
-         */
+
+        // Attach body parts to the character node.
         for (BodyPart part : BodyPart.values()) {
             if (character.includes(part)) {
                 assetKey = character.makeGeometryAssetKey(part);
@@ -437,9 +433,8 @@ public class DodgerGame
         }
 
         animControl.addListener(this);
-        /*
-         * Create a channel to animate all bones in the Skeleton.
-         */
+
+        // Create a channel to animate all bones in the Skeleton.
         animChannel = animControl.createChannel();
         float blendTime = 0f;
         animChannel.setAnim(idleAnimation, blendTime);

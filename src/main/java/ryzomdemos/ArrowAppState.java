@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -123,9 +123,8 @@ public class ArrowAppState extends SimpleAppState {
     @Override
     public void cleanup() {
         super.cleanup();
-        /*
-         * Remove the geometry from the scene.
-         */
+
+        // Remove the geometry from the scene.
         arrowGeometry.removeFromParent();
     }
 
@@ -140,9 +139,8 @@ public class ArrowAppState extends SimpleAppState {
         super.initialize(sm, app);
 
         appInstance = (DodgerGame) app;
-        /*
-         * Attach the geometry to the scene.
-         */
+
+        // Attach the geometry to the scene.
         Node node = (Node) assetManager.loadModel(arrowAssetPath);
         Node node2 = (Node) node.getChild(0);
         Node node3 = (Node) node2.getChild(0);
@@ -161,15 +159,13 @@ public class ArrowAppState extends SimpleAppState {
     @Override
     public void update(float tpf) {
         super.update(tpf);
-        /*
-         * Update the arrow's velocity and location.
-         */
+
+        // Update the arrow's velocity and location.
         MyVector3f.accumulateScaled(velocity, gravity, tpf);
         Vector3f offset = velocity.mult(tpf);
         arrowGeometry.move(offset);
-        /*
-         * Rotate the arrow to point in the direction of motion.
-         */
+
+        // Rotate the arrow to point in the direction of motion.
         if (velocity.lengthSquared() > 0.01f) {
             Vector3f direction = velocity.normalize();
 
@@ -194,15 +190,12 @@ public class ArrowAppState extends SimpleAppState {
             reset();
             appInstance.die();
         }
-        /*
-         * Check whether the arrow has passed behind the camera.
-         */
+
+        // Check whether the arrow has passed behind the camera.
         float cameraZ = cam.getLocation().z;
         float arrowZ = arrowGeometry.getLocalTranslation().z;
         if (arrowZ < cameraZ) {
-            /*
-             * There's a random delay before the arrow is re-launched.
-             */
+            // There's a random delay before the arrow is re-launched.
             int n = RyzomUtil.generator.nextPoisson(tpf);
             if (n > 0) {
                 velocity.zero();
@@ -224,9 +217,8 @@ public class ArrowAppState extends SimpleAppState {
         float yInit = -0.5f;
         float zInit = 5f;
         arrowGeometry.setLocalTranslation(new Vector3f(xInit, yInit, zInit));
-        /*
-         * Aim for the exact center 50% of the time.
-         */
+
+        // Aim for the exact center 50% of the time.
         float xTarget;
         if (RyzomUtil.generator.nextFloat() < 0.5f) {
             xTarget = 0f; // center
