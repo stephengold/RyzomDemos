@@ -103,31 +103,31 @@ public class BuildCharacter extends AcorusDemo {
     /**
      * channel for playing canned animations
      */
-    private AnimChannel animChannel = null;
+    private static AnimChannel animChannel = null;
     /**
      * visualize the world axes
      */
-    private AxesVisualizer axes;
+    private static AxesVisualizer axes;
     /**
      * dump debugging information to System.out
      */
-    final private Dumper dumper = new Dumper();
+    final private static Dumper dumper = new Dumper();
     /**
      * single-sided green material for the platform
      */
-    private Material greenMaterial;
+    private static Material greenMaterial;
     /**
      * main Node of the loaded character model
      */
-    private Node characterNode;
+    private static Node characterNode;
     /**
      * visualize the Skeleton of the loaded character model
      */
-    private SkeletonVisualizer sv;
+    private static SkeletonVisualizer sv;
     /**
      * AppState to manage the status overlay
      */
-    private StatusAppState statusAppState;
+    private static StatusAppState statusAppState;
     // *************************************************************************
     // new methods exposed
 
