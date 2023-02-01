@@ -249,7 +249,7 @@ public class BuildCharacter extends AcorusDemo {
         viewPort.setBackgroundColor(bgColor);
         addLighting();
 
-        // Hide the render statistics overlay.
+        // Initially hide the render-statistics overlay.
         stateManager.getState(StatsAppState.class).toggleStats();
 
         addAxes();
