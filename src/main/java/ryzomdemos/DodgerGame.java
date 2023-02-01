@@ -131,19 +131,16 @@ public class DodgerGame
      * @param arguments array of command-line arguments (not null)
      */
     public static void main(String[] arguments) {
+        String title = applicationName + " " + MyString.join(arguments);
         DodgerGame application = new DodgerGame();
         Heart.parseAppArgs(application, arguments);
 
         boolean loadDefaults = true;
         AppSettings settings = new AppSettings(loadDefaults);
-
-        // Customize the window's title bar.
-        String title = applicationName + " " + MyString.join(arguments);
-        settings.setTitle(title);
-
         settings.setAudioRenderer(null);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setSamples(4); // anti-aliasing
+        settings.setTitle(title); // Customize the window's title bar.
         application.setSettings(settings);
         /*
          * Invoke the JME startup code,
