@@ -4,7 +4,7 @@ plugins {
     id 'application'
 }
 
-ext.jme3Version = '3.6.0-beta1' // current version of JMonkeyEngine
+ext.jme3Version = '3.6.0-beta3' // current version of JMonkeyEngine
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -46,9 +46,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.stephengold:Heart:8.2.0'
-    implementation 'com.github.stephengold:Acorus:0.9.17'
-    implementation 'com.github.stephengold:Wes:0.7.2'
+    implementation 'com.github.stephengold:Heart:8.3.0+for36'
+    implementation 'com.github.stephengold:Acorus:0.9.18+for36'
+    implementation 'com.github.stephengold:Wes:0.7.3+for36'
     implementation 'org.jmonkeyengine:jme3-core:' + jme3Version
     runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jme3Version
     implementation 'org.jmonkeyengine:jme3-desktop:' + jme3Version
