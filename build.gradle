@@ -32,7 +32,7 @@ tasks.withType(JavaExec) { // Java runtime options:
     classpath sourceSets.main.runtimeClasspath
     enableAssertions true
     //jvmArgs '-verbose:gc'
-    //jvmArgs '-Xms512m', '-Xmx512m'
+    //jvmArgs '-Xms512m', '-Xmx512m' // to enlarge the Java heap
     jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
 }
 
@@ -46,6 +46,7 @@ configurations.all {
 repositories {
     //mavenLocal() // to find local SNAPSHOTs of libraries
     mavenCentral()
+    //maven { url 'https://s01.oss.sonatype.org/content/groups/staging' } // to find libraries staged but not yet released
 }
 
 dependencies {
