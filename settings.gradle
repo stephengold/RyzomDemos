@@ -1,0 +1,5 @@
+/*
+ * settings.gradle: global settings for the RyzomDemos project
+ */
+
+rootProject.name = 'RyzomDemos'
