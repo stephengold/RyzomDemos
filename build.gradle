@@ -4,7 +4,7 @@ plugins {
     id 'application'
 }
 
-ext.jme3Version = '3.6.0-stable' // current version of JMonkeyEngine
+ext.jme3Version = '3.6.1-stable' // current version of JMonkeyEngine
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
