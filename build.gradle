@@ -1,7 +1,7 @@
-// Gradle script to build the RyzomDemos project
+// Gradle build script for the RyzomDemos project
 
 plugins {
-    id 'application' // to build a Java application
+    id 'application' // to build Java applications
 }
 
 ext.jme3Version = '3.6.1-stable' // current version of JMonkeyEngine
@@ -47,7 +47,7 @@ application {
 }
 
 configurations.configureEach {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // to disable caching of SNAPSHOTs
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // to disable caching of snapshots
 }
 
 dependencies {
@@ -74,7 +74,7 @@ tasks.register('runStatistics', JavaExec) {
     mainClass = 'ryzomdemos.Statistics'
 }
 
-// cleanup tasks:
+// Register cleanup tasks:
 
 clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanSandbox', 'cleanSOs', 'cleanSummary')
 
