@@ -52,7 +52,7 @@ configurations.configureEach {
 
 dependencies {
     implementation 'com.github.stephengold:Heart:9.0.0'
-    implementation 'com.github.stephengold:Acorus:1.1.1'
+    implementation 'com.github.stephengold:Acorus:2.0.0'
     implementation 'com.github.stephengold:Wes:0.8.1'
     implementation 'org.jmonkeyengine:jme3-core:' + jme3Version
     runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jme3Version
