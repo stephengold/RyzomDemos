@@ -1,10 +1,10 @@
-// Gradle build script for the RyzomDemos project
+// Gradle script to build the RyzomDemos project
 
 plugins {
     id 'application' // to build Java applications
 }
 
-ext.jme3Version = '3.6.1-stable' // current version of JMonkeyEngine
+ext.jme3Version = '3.7.0-alpha3.1' // current version of JMonkeyEngine
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
