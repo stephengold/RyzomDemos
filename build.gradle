@@ -4,7 +4,7 @@ plugins {
     id 'application' // to build Java applications
 }
 
-ext.jme3Version = '3.7.0-alpha3.1' // current version of JMonkeyEngine
+ext.jme3Version = '3.7.0-beta1' // current version of JMonkeyEngine
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
