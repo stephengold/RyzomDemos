@@ -1,6 +1,4 @@
-/*
- * settings.gradle: global settings for the RyzomDemos project
- */
+// global build settings for the RyzomDemos project
 
 dependencyResolutionManagement {
     repositories {
@@ -12,3 +10,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'RyzomDemos'
+
+// no subprojects

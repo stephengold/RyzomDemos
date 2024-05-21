@@ -1,7 +1,7 @@
 // Gradle script to build the RyzomDemos project
 
 plugins {
-    id 'application' // to build Java applications
+    id 'application' // to build JVM applications
 }
 
 java {
