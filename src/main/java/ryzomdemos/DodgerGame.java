@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019-2023, Stephen Gold
+ Copyright (c) 2019-2025 Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -69,9 +69,7 @@ import jme3utilities.wes.AnimationEdit;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class DodgerGame
-        extends AcorusDemo
-        implements AnimEventListener {
+public class DodgerGame extends AcorusDemo implements AnimEventListener {
     // *************************************************************************
     // constants and loggers
 
@@ -235,17 +233,13 @@ public class DodgerGame
         dim.unbind(KeyInput.KEY_W);
         dim.unbind(KeyInput.KEY_Z);
 
-        dim.bind("start", KeyInput.KEY_G); // TODO use bind(String, int...)
-        dim.bind("start", KeyInput.KEY_Y);
-        dim.bind("start", KeyInput.KEY_RETURN);
+        dim.bind("start", KeyInput.KEY_G, KeyInput.KEY_Y, KeyInput.KEY_RETURN);
 
-        dim.bind("strafe left", KeyInput.KEY_A);
-        dim.bind("strafe left", KeyInput.KEY_LEFT);
-        dim.bind("strafe left", KeyInput.KEY_NUMPAD4);
+        dim.bind("strafe left",
+                KeyInput.KEY_A, KeyInput.KEY_LEFT, KeyInput.KEY_NUMPAD4);
 
-        dim.bind("strafe right", KeyInput.KEY_D);
-        dim.bind("strafe right", KeyInput.KEY_RIGHT);
-        dim.bind("strafe right", KeyInput.KEY_NUMPAD6);
+        dim.bind("strafe right",
+                KeyInput.KEY_D, KeyInput.KEY_RIGHT, KeyInput.KEY_NUMPAD6);
 
         dim.bind("toggle help", KeyInput.KEY_H);
     }
